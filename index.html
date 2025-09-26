@@ -71,6 +71,7 @@
     </nav>
   </div>
 
+  <!-- CONTENT START -->
   <main>
     <section class="block block-small">
       <h1 data-i18n="hero.title">Chase the Goose.</h1>
@@ -125,7 +126,8 @@
       <a class="btn" href="#" data-i18n="cta.playstore">Forum</a>
     </section>
   </main>
-
+  <!-- CONTENT END -->
+   
   <footer class="container footer" role="contentinfo">
     <nav class="footer-nav" aria-label="Footer">
       <ul>
@@ -160,30 +162,40 @@
     })();
 
         /* Toggle meny-panelen */
+       /* Toggle meny-panelen */
     (function(){
       const btn = document.querySelector('.menu-toggle');
       const panel = document.getElementById('menu-panel');
-      const header = document.querySelector('.header'); // 👈 hämta headern
+      const header = document.querySelector('.header');
       if(!btn || !panel || !header) return;
+
+      const mq = window.matchMedia('(max-width: 900px)');
+
+      function setExpanded(open){
+        btn.setAttribute('aria-expanded', String(open));
+        panel.hidden = !open;
+        header.classList.toggle('menu-open', open); // tar bort header-shadow när öppen
+      }
 
       btn.addEventListener('click', () => {
         const open = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!open));
-        panel.hidden = open;
-
-        // 👇 Lägg till/ta bort klass för att styra shadow
-        header.classList.toggle('menu-open', !open);
+        setExpanded(!open);
       });
 
-      /* Stäng när man klickar en länk */
       panel.addEventListener('click', (e) => {
-        if(e.target.closest('a')){
-          btn.setAttribute('aria-expanded', 'false');
-          panel.hidden = true;
-          header.classList.remove('menu-open'); // 👈 återställ shadow
-        }
+        if(e.target.closest('a')) setExpanded(false);
       });
+
+      // 🔧 När man växlar bredd: desktop => stäng mobilmenyn
+      function handleResize(){
+        if (!mq.matches) {        // nu är vi på desktop
+          setExpanded(false);     // stäng & återställ shadow
+        }
+      }
+      window.addEventListener('resize', handleResize);
+      handleResize();
     })();
+
 
   </script>
 

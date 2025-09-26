@@ -271,3 +271,71 @@ body {
 /* Globala listor: ta bort punkter */
 ul, li { list-style: none !important; margin: 0; padding: 0; }
 li::before, li::marker { content: none !important; }
+
+
+/* === Hamburger → X animation === */
+
+/* Se till att knappen är en positioneringsreferens */
+.menu-toggle{
+  position: absolute;                 /* du har redan absolut + 50% centrerad */
+  top: 50%;
+  left: var(--menu-toggle-offset-left);
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  padding: 0; margin: 0; border: 0;
+  background: transparent;
+  display: none;                      /* din logik styr visning */
+  cursor: pointer;
+}
+
+/* Nollställ ev. tidigare flex-stacking */
+.menu-toggle { align-items: initial; justify-content: initial; gap: 0; }
+
+/* Strecken positioneras exakt över varandra och flyttas i Y-led */
+.menu-toggle span{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 3px;
+  background: #1a0812;
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform .22s ease, opacity .18s ease;
+}
+
+/* Övre, mitten, undre rad i stängt läge */
+.menu-toggle span:nth-child(1){ transform: translate(-50%, calc(-50% - 7px)); }
+.menu-toggle span:nth-child(2){ transform: translate(-50%, -50%); }
+.menu-toggle span:nth-child(3){ transform: translate(-50%, calc(-50% + 7px)); }
+
+/* ÖPPET läge (aria-expanded="true"): 
+   - Mitten försvinner
+   - Övre & undre roteras till ett "X" i mitten
+*/
+.menu-toggle[aria-expanded="true"] span:nth-child(1){
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0.4);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(3){
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.menu-toggle[aria-expanded="true"] span { background: #FFDD17; }
+/* Respekt för reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .menu-toggle span{ transition: none; }
+}
+/* ✅ Antingen/eller baserat på bredd – INTE scroll */
+@media (max-width: 900px){
+  .menu-toggle{ display: inline-flex; }   /* visa hamburgare */
+  .nav-left, .nav-right{ display: none; } /* dölj länkar */
+}
+
+@media (min-width: 901px){
+  .menu-toggle{ display: none; }          /* dölj hamburgare */
+  .nav-left, .nav-right{ display: block; }/* visa länkar (nav är block; ul:en är flex) */
+}
+
