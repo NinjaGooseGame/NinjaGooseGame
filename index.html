@@ -1,81 +1,194 @@
 <!doctype html>
-<html lang="sv">
-<!doctype html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title data-i18n="site.title">GooseHunt – Officiell sida</title>
-  <meta name="description" content="GooseHunt – mobilspel. Officiell webbplats, policies, support och nyheter." />
-  <link rel="preload" href="/assets/img/logo.svg" as="image">
+  <title data-i18n="site.title">GooseHunt Game – Official Page</title>
+  <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
 
   <!-- ✅ Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap&subset=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Poppins:wght@400;600&display=swap&subset=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
 
+  <!-- Preload clouds to avoid flashes -->
+  <link rel="preload" as="image" href="/assets/img/cloud1.png">
+  <link rel="preload" as="image" href="/assets/img/cloud2.png">
+  <link rel="preload" as="image" href="/assets/img/cloud3.png">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="/assets/css/main.css" />
+
+  <!-- ✅ Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png">
+
+  <!-- Hotwire Turbo for persistent layout (clouds stay between pages) -->
+  <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
 </head>
-<body>
-  <!-- resten av din kod är oförändrad -->
-</body>
-</html>
 
 <body>
-  <header class="container">
-    <nav class="nav">
-      <a class="brand" href="/" aria-label="GooseHunt home">
-        <img src="/assets/img/logo.svg" alt="GooseHunt logo" width="36" height="36">
-        <span>GooseHunt</span>
+  <!-- Permanent clouds layer (populated by /js/clouds.js) -->
+  <div id="clouds" class="clouds" data-turbo-permanent></div>
+
+  <!-- Header -->
+  <header class="header container" role="banner" style="--menu-toggle-offset-left: 14px;">
+    <div class="header-inner" id="site-header">
+      <!-- Left nav -->
+      <nav class="nav nav-left" role="navigation" aria-label="Primary left">
+        <ul>
+          <li><a href="/" data-i18n="nav.home">Home</a></li>
+          <li><a href="/news.html" data-i18n="nav.news">News</a></li>
+        </ul>
+      </nav>
+
+      <!-- Centered logo -->
+      <a href="/" class="logo-wrap" aria-label="GooseHunt homepage">
+        <img src="/assets/img/Goosehunt_Logo.png" alt="GooseHunt logo" class="logo">
       </a>
-      <button id="navToggle" class="hamburger" aria-expanded="false" aria-controls="menu">☰</button>
-      <ul id="menu" class="menu">
-        <li><a data-i18n="nav.home" href="/">Home</a></li>
-        <li><a data-i18n="nav.privacy" href="/privacy.html">Privacy</a></li>
-        <li><a data-i18n="nav.terms" href="/terms.html">Terms</a></li>
-        <li><a data-i18n="nav.support" href="/support.html">Support</a></li>
-        <li>
-          <select id="lang" aria-label="Language">
-            <option value="en">EN</option>
-            <option value="sv" selected>SV</option>
-          </select>
-        </li>
-      </ul>
-    </nav>
+
+      <!-- Right nav -->
+      <nav class="nav nav-right" role="navigation" aria-label="Primary right">
+        <ul>
+          <li><a href="/support.html" data-i18n="nav.support">Support</a></li>
+          <li><a href="/privacy.html" data-i18n="nav.privacy">Policy</a></li>
+        </ul>
+      </nav>
+
+      <!-- Menu toggle (visas vid shrink/mobil) -->
+      <button class="menu-toggle" aria-controls="menu-panel" aria-expanded="false" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <h1 data-i18n="hero.title">Jaga gåsen. Vinn jakten.</h1>
-      <p data-i18n="hero.subtitle">Ett snabbt endless runner-spel på iOS & Android.</p>
+  <!-- Mobilmeny (döljs med [hidden]) -->
+  <div id="menu-panel" class="menu-panel" hidden>
+    <nav class="menu-panel-nav" aria-label="Mobile menu">
+      <ul>
+        <li><a href="/" data-i18n="nav.home">Home</a></li>
+        <li><a href="/news.html" data-i18n="nav.news">News</a></li>
+        <li><a href="/support.html" data-i18n="nav.support">Support</a></li>
+        <li><a href="/privacy.html" data-i18n="nav.privacy">Policy</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main>
+    <section class="block block-small">
+      <h1 data-i18n="hero.title">Chase the Goose.</h1>
+      <h1 data-i18n="hero.title">Win the Hunt.</h1>
+      <p data-i18n="hero.subtitle">A fast-paced runner game, on Now on iOS & Android.</p>
       <div class="store-buttons">
         <a class="btn" href="#" data-i18n="cta.appstore">App Store</a>
-        <a class="btn outline" href="#" data-i18n="cta.playstore">Google Play</a>
+        <a class="btn" href="#" data-i18n="cta.playstore">Google Play</a>
       </div>
     </section>
 
-    <section class="features">
-      <h2 data-i18n="features.title">Varför GooseHunt?</h2>
+    <section class="block block-medium">
+      <h2 data-i18n="features.title">Why GooseHunt?</h2>
       <ul class="grid">
         <li>
-          <h3 data-i18n="features.fast.title">Snabbt & smidigt</h3>
-          <p data-i18n="features.fast.desc">Responsivt gameplay med lane-byten och powerups.</p>
+          <h3 data-i18n="features.fast.title">Fast & Smooth</h3>
+          <p data-i18n="features.fast.desc">Responsive gameplay with lane switching and powerups.</p>
         </li>
         <li>
-          <h3 data-i18n="features.custom.title">Anpassning</h3>
-          <p data-i18n="features.custom.desc">Byt kläder, effekter och banor via garderoben.</p>
+          <h3 data-i18n="features.custom.title">Customization</h3>
+          <p data-i18n="features.custom.desc">Change outfits, effects and tracks via the wardrobe.</p>
         </li>
         <li>
-          <h3 data-i18n="features.fair.title">Fair play</h3>
-          <p data-i18n="features.fair.desc">Tydliga villkor, integritet i fokus.</p>
+          <h3 data-i18n="features.fair.title">Fair Play</h3>
+          <p data-i18n="features.fair.desc">Clear terms, privacy first.</p>
         </li>
       </ul>
     </section>
+
+    <section class="block block-medium">
+      <h2 data-i18n="features.title">Wardrobe</h2>
+      <ul class="grid">
+        <li>
+          <h3 data-i18n="features.fast.title"></h3>
+          <p data-i18n="features.fast.desc">Customize your character with clothing &amp; costumes with the rewards you earn along the way</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block block-medium">
+      <h2 data-i18n="features.title">Different Tracks</h2>
+      <ul class="grid">
+        <li>
+          <p data-i18n="features.fair.desc">Choose your track. The geese are everywhere!</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block block-small">
+      <h2 data-i18n="community.title">Community</h2>
+      <p data-i18n="community.desc">Join forums, competitions and follow news.</p>
+      <a class="btn" href="#" data-i18n="cta.playstore">Forum</a>
+    </section>
   </main>
 
-  <footer class="container footer">
-    <small>© <span id="year"></span> GooseHunt</small>
+  <footer class="container footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="/privacy.html">Privacy</a></li>
+        <li><a href="/policies.html">Policies</a></li>
+        <li><a href="/about.html">About us</a></li>
+      </ul>
+    </nav>
+    <small>© <span id="year">2025</span> GooseHunt | JOJO DELISE | Johannes Bengtson |</small>
   </footer>
+
+  <!-- Scripts -->
+  <script>
+    /* Årspann */
+    (function () {
+      var start = 2025;
+      var now = new Date().getFullYear();
+      var el = document.getElementById('year');
+      if (el) el.textContent = now > start ? (start + ' - ' + now) : String(start);
+    })();
+
+    /* Shrink on scroll (sätter .is-shrunk på .header) */
+    (function () {
+      const header = document.querySelector('.header');
+      const setState = () => {
+        if (!header) return;
+        header.classList.toggle('is-shrunk', window.scrollY > 10);
+      };
+      setState();
+      window.addEventListener('scroll', setState, { passive: true });
+      window.addEventListener('resize', setState);
+    })();
+
+        /* Toggle meny-panelen */
+    (function(){
+      const btn = document.querySelector('.menu-toggle');
+      const panel = document.getElementById('menu-panel');
+      const header = document.querySelector('.header'); // 👈 hämta headern
+      if(!btn || !panel || !header) return;
+
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        panel.hidden = open;
+
+        // 👇 Lägg till/ta bort klass för att styra shadow
+        header.classList.toggle('menu-open', !open);
+      });
+
+      /* Stäng när man klickar en länk */
+      panel.addEventListener('click', (e) => {
+        if(e.target.closest('a')){
+          btn.setAttribute('aria-expanded', 'false');
+          panel.hidden = true;
+          header.classList.remove('menu-open'); // 👈 återställ shadow
+        }
+      });
+    })();
+
+  </script>
 
   <script src="/js/nav.js" defer></script>
   <script src="/js/i18n.js" defer></script>
+  <script src="/js/clouds.js" defer></script>
 </body>
 </html>

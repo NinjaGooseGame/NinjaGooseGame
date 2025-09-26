@@ -1,0 +1,273 @@
+/* ====== Bas ====== */
+body {
+  margin: 0;
+  background: #2f82ef; /* bakgrundsfärg */
+  font-family: 'Poppins', sans-serif;
+  color: #1a0812;
+  text-align: center;
+}
+
+/* Header-container */
+.header {
+  --header-h: 112px;
+  --header-h-shrunk: 72px;
+  /* 🔧 Styr vänstermarginal för menutoggle här (kan överskuggas per sida med inline style) */
+  --menu-toggle-offset-left: 40px;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  box-shadow: 0 6px 0 #D1D8FF, 0 15px 0 #0000004d;
+  height: var(--header-h);
+  padding-top: env(safe-area-inset-top); /* iOS notch */
+}
+.header.is-shrunk { height: var(--header-h-shrunk); }
+/* Dölj header-skuggan när menyn är öppen */
+.header.menu-open {
+  box-shadow: none !important;
+}
+
+
+/* ✅ Grid löser “loggan exakt i mitten” */
+.header-inner{
+  width: min(1200px, 100%);
+  margin-inline: auto;          /* <-- centrera containern */
+  padding-inline: 16px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* vänster | LOGO | höger */
+  align-items: center;          /* vertikal centrering */
+  column-gap: 1rem;
+}
+
+/* Placering */
+.nav-left  { grid-column: 1; justify-self: end; }   /* trycks mot mitten */
+.logo-wrap { grid-column: 2; justify-self: center; line-height: 0; }
+.nav-right { grid-column: 3; justify-self: start; } /* från mitten och utåt */
+
+/* Nav-listor */
+.nav ul{
+  display:flex;
+  align-items:center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.nav a{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+  font-weight:600;
+  color:#222;
+  line-height:1;
+  padding: 0.25rem 0;
+}
+.nav a:hover,
+.nav a:focus-visible { color: #FFDD17; }
+
+/* Logga – styr höjden och krympning */
+.logo{
+  display:block;
+  height: calc(var(--header-h) - 28px);
+  width:auto;
+  transition: height .2s ease;
+}
+.header.is-shrunk .logo{ height: calc(var(--header-h-shrunk) - 16px); }
+
+/* Små skärmar: minska gap lite */
+@media (max-width: 720px) {
+  .nav ul { gap: 0.9rem; }
+}
+/* Gör containern position:relative så vi kan centrera absolut */
+.header-inner { position: relative; }
+
+/* MENUTOGGLE: exakt vertikalt centrerad, vänstermarginal styrs av variabeln */
+.menu-toggle{
+  position: absolute;
+  top: 50%;
+  left: var(--menu-toggle-offset-left);
+  transform: translateY(-50%);
+  display: none;                 /* dold som standard */
+  width: 40px; height: 40px;
+  background: transparent; border: 0; cursor: pointer;
+  padding: 0; margin: 0;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 6px;
+}
+.menu-toggle span{
+  display:block; width:26px; height:3px; border-radius:2px; background:#1a0812;
+}
+
+/* Visa knappen när länkarna är dolda pga SHRINK */
+.header.is-shrunk .menu-toggle{ display:inline-flex; }
+.header.is-shrunk .nav-left,
+.header.is-shrunk .nav-right{ display:none; }
+
+/* Visa knappen på små skärmar (och göm länkar) */
+@media (max-width: 900px){
+  .menu-toggle{ display:inline-flex; }
+  .nav-left, .nav-right{ display:none; }
+}
+
+
+
+
+/* ======= MOBILMENY PANEL (enkel baseline) ======= */
+.menu-panel {
+  position: fixed;
+  top: var(--header-h-shrunk);   /* läggs direkt under shrinkad header */
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  box-shadow:
+    0 6px 0 #D1D8FF,
+    0 15px 0 #0000004d;
+  z-index: 999;
+  padding: 12px 16px;
+}
+.header:not(.is-shrunk) + .menu-panel { top: var(--header-h); } /* om man öppnar innan shrink */
+
+.menu-panel-nav ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.menu-panel-nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #222;
+  padding: 10px 4px;
+}
+.menu-panel-nav a:hover,
+.menu-panel-nav a:focus-visible { color: #FFDD17; }
+
+/* ====== Block ====== */
+.block {
+  margin: 50px auto;
+  padding: 40px 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  color: #1a0812;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+}
+
+/* === Fasta bakgrunder på alla block (inga bilder) === */
+.block,
+.block-small,
+.block-medium,
+.block-large,
+.block.square {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow:
+    0 6px 0px #D1D8FF,   /* liten nära skugga */
+    0 15px 0px #0000004d;/* större mörkare skugga */
+}
+
+/* Lite tajtare på riktigt stora skärmar */
+@media (min-width: 1200px) {
+  .block { width: 70%; }
+}
+
+/* Standardknapp */
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #FFDD17;
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 12px;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 
+    0 4px 0px #FFB213,
+    0 8px 0px #00000033;
+  border: none;
+}
+.btn:hover {
+  background: #FFDD17;
+  color: #ffffff;
+  box-shadow: 
+    0 6px 0px #FFB213,
+    0 12px 0px #0000004d;
+}
+.btn.outline {
+  background: transparent;
+  color: #FFDD17;
+  box-shadow: none;
+}
+.btn.outline:hover {
+  background: #FFDD17;
+  color: #111;
+  box-shadow: 
+    0 6px 0px #D1D8FF,
+    0 12px 0px #0000004d;
+}
+
+/* ====== Moln ====== */
+.clouds {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+.cloud {
+  position: absolute;
+  opacity: 1;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+@keyframes driftSide { from { transform: translateX(0); } to { transform: translateX(20px); } }
+.cloud-left  { left: 0;  animation-name: driftSide; }
+.cloud-right { right: 0; animation-name: driftSide; }
+.cloud-bottom{ bottom: 0; animation-name: driftSide; }
+
+/* ===== Footer: uppåtriktad skugga ===== */
+.footer {
+  background: #ffffff; 
+  box-shadow: 
+    0 -8px 0px #D1D8FF,
+    0 0px 0px #0000004d;
+
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+}
+
+/* Footer-länkar på rad */
+.footer-nav ul {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+.footer-nav li { display: inline; }
+.footer-nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #222;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+.footer-nav a:hover,
+.footer-nav a:focus-visible { color: #FFDD17; }
+
+/* Globala listor: ta bort punkter */
+ul, li { list-style: none !important; margin: 0; padding: 0; }
+li::before, li::marker { content: none !important; }
