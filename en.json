@@ -1,0 +1,18 @@
+{
+  "site.title": "GooseHunt – Official Site",
+  "nav.home": "Home",
+  "nav.privacy": "Privacy",
+  "nav.terms": "Terms",
+  "nav.support": "Support",
+  "hero.title": "Chase the goose. Win the hunt.",
+  "hero.subtitle": "A fast endless runner for iOS & Android.",
+  "cta.appstore": "App Store",
+  "cta.playstore": "Google Play",
+  "features.title": "Why GooseHunt?",
+  "features.fast.title": "Fast & fluid",
+  "features.fast.desc": "Responsive lane switching and powerups.",
+  "features.custom.title": "Customization",
+  "features.custom.desc": "Swap outfits, effects, and tracks.",
+  "features.fair.title": "Fair play",
+  "features.fair.desc": "Clear terms, privacy first."
+}

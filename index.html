@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="site.title">GooseHunt – Officiell sida</title>
+  <meta name="description" content="GooseHunt – mobilspel. Officiell webbplats, policies, support och nyheter." />
+  <link rel="preload" href="/assets/img/logo.svg" as="image">
+  <link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+<body>
+  <header class="container">
+    <nav class="nav">
+      <a class="brand" href="/" aria-label="GooseHunt home">
+        <img src="/assets/img/logo.svg" alt="GooseHunt logo" width="36" height="36">
+        <span>GooseHunt</span>
+      </a>
+      <button id="navToggle" class="hamburger" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu" class="menu">
+        <li><a data-i18n="nav.home" href="/">Home</a></li>
+        <li><a data-i18n="nav.privacy" href="/privacy.html">Privacy</a></li>
+        <li><a data-i18n="nav.terms" href="/terms.html">Terms</a></li>
+        <li><a data-i18n="nav.support" href="/support.html">Support</a></li>
+        <li>
+          <select id="lang" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="sv" selected>SV</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1 data-i18n="hero.title">Jaga gåsen. Vinn jakten.</h1>
+      <p data-i18n="hero.subtitle">Ett snabbt endless runner-spel på iOS & Android.</p>
+      <div class="store-buttons">
+        <a class="btn" href="#" data-i18n="cta.appstore">App Store</a>
+        <a class="btn outline" href="#" data-i18n="cta.playstore">Google Play</a>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2 data-i18n="features.title">Varför GooseHunt?</h2>
+      <ul class="grid">
+        <li>
+          <h3 data-i18n="features.fast.title">Snabbt & smidigt</h3>
+          <p data-i18n="features.fast.desc">Responsivt gameplay med lane-byten och powerups.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.custom.title">Anpassning</h3>
+          <p data-i18n="features.custom.desc">Byt kläder, effekter och banor via garderoben.</p>
+        </li>
+        <li>
+          <h3 data-i18n="features.fair.title">Fair play</h3>
+          <p data-i18n="features.fair.desc">Tydliga villkor, integritet i fokus.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <small>© <span id="year"></span> GooseHunt</small>
+  </footer>
+
+  <script src="/js/nav.js" defer></script>
+  <script src="/js/i18n.js" defer></script>
+</body>
+</html>
