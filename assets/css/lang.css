@@ -1,0 +1,75 @@
+/* === Language modal === */
+.lang-hidden { display: none !important; }
+
+.lang-overlay{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10010; padding: 16px;
+}
+
+.lang-modal{
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  width: min(520px, 92vw);
+  max-height: 80vh; 
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.lang-modal__header{
+  padding: 18px 20px; border-bottom: 1px solid #ddd;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.lang-modal__header h2{ margin: 0; font-size: 18px; }
+.lang-close{
+  background: transparent; border: 0; color: #666;
+  font-size: 22px; cursor: pointer;
+}
+
+.lang-body{ padding: 12px 16px; }
+.lang-list{ display: grid; gap: 8px; }
+
+.lang-row{
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 10px 12px; 
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px; 
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.lang-row:hover{ background:#f9f9f9; }
+.lang-row[aria-checked="true"]{
+  border-color: #FFDD17; background: #FFF9D1;
+}
+.lang-row__left{ display: flex; align-items: center; gap: 10px; }
+.lang-row .flag{ width: 10px; height: 10px; border-radius: 4px; object-fit: cover; }
+.lang-row__name{ font-weight: 600; }
+.lang-row__check{ font-weight: 700; }
+
+.lang-footer{
+  padding: 14px 16px; 
+  display: flex; justify-content: flex-end; gap: 10px;
+  border-top: 1px solid #ddd;
+}
+.lang-footer button{
+  border:0; padding:10px 14px; border-radius:10px;
+  cursor:pointer; font-weight:600;
+}
+.lang-footer button.primary{
+  background:#FFDD17; color:#111;
+}
+
+/* --- Fix: små flaggor i language-dropdown --- */
+#langMenu .lang-item .flag,
+#langMenu img.flag{
+  width: auto !important;
+  height: 18px !important;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}

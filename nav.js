@@ -5,13 +5,7 @@
   const menuToggle = document.querySelector('.menu-toggle');
   const menuPanel  = document.getElementById('menu-panel');
 
-  // Krymp vid scroll
-  const onScroll = () => {
-    const shrink = window.scrollY > 8;
-    header.classList.toggle('is-shrunk', shrink);
-  };
-  document.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+
 
   // Verklig overflow-detektering (inte bara media query)
   const fits = () => {

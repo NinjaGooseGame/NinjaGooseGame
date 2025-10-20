@@ -1,206 +1,159 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title data-i18n="site.title">GooseHunt Game – Official Page</title>
   <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
+    <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon/favicon_favicon_goosehunt_large.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon_goosehunt_small.png">
+  <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico">
 
   <!-- ✅ Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Poppins:wght@400;600&display=swap&subset=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...et=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
 
-  <!-- Preload clouds to avoid flashes -->
-  <link rel="preload" as="image" href="/assets/img/cloud1.png">
-  <link rel="preload" as="image" href="/assets/img/cloud2.png">
-  <link rel="preload" as="image" href="/assets/img/cloud3.png">
-
+  <!-- LANGUAGE -->
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script> 
   <!-- CSS -->
-  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css">
+
+  <!-- Consent -->
+  <link rel="stylesheet" href="./assets/css/consent.css">
+  <script src="./js/consent.js" defer></script>
 
   <!-- ✅ Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon.png">
 
-  <!-- Hotwire Turbo for persistent layout (clouds stay between pages) -->
+  <!-- Hotwire Turbo för att behålla t.ex. molnlagret mellan sidnavigeringar -->
   <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-gallery]').forEach(root => {
+    const main   = root.querySelector('.gallery-main');
+    const slides = Array.from(root.querySelectorAll('.gallery-track img'));
+    const thumbs = Array.from(root.querySelectorAll('.gallery-thumbs img'));
+
+    let programmaticJumpUntil = 0;
+
+    function setActive(i){
+      thumbs.forEach((t,j) => t.classList.toggle('is-active', j === i));
+    }
+    function goTo(i){
+      const el = slides[i];
+      if (!el) return;
+      programmaticJumpUntil = performance.now() + 350;
+      el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      setActive(i);
+    }
+
+    thumbs.forEach((t,i) => t.addEventListener('click', () => goTo(i)));
+
+    function nearestSlideIndex(){
+      const mainRect = main.getBoundingClientRect();
+      const centerX  = (mainRect.left + mainRect.right) / 2;
+      let bestI = 0, bestDist = Infinity;
+      slides.forEach((img, i) => {
+        const r = img.getBoundingClientRect();
+        const slideCenter = (r.left + r.right) / 2;
+        const d = Math.abs(slideCenter - centerX);
+        if (d < bestDist){ bestDist = d; bestI = i; }
+      });
+      return bestI;
+    }
+
+    let ticking = false;
+    main.addEventListener('scroll', () => {
+      if (performance.now() < programmaticJumpUntil) return;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setActive(nearestSlideIndex());
+        ticking = false;
+      });
+    }, { passive: true });
+
+    setActive(0);
+    window.addEventListener('load', () => setActive(nearestSlideIndex()));
+  });
+});
+</script>
 
 <body>
-  <!-- Permanent clouds layer (populated by /js/clouds.js) -->
-  <div id="clouds" class="clouds" data-turbo-permanent></div>
 
-  <!-- Header -->
-  <header class="header container" role="banner" style="--menu-toggle-offset-left: 14px;">
-    <div class="header-inner" id="site-header">
-      <!-- Left nav -->
-      <nav class="nav nav-left" role="navigation" aria-label="Primary left">
-        <ul>
-          <li><a href="/" data-i18n="nav.home">Home</a></li>
-          <li><a href="/news.html" data-i18n="nav.news">News</a></li>
-        </ul>
-      </nav>
 
-      <!-- Centered logo -->
-      <a href="/" class="logo-wrap" aria-label="GooseHunt homepage">
-        <img src="/assets/img/Goosehunt_Logo.png" alt="GooseHunt logo" class="logo">
-      </a>
-
-      <!-- Right nav -->
-      <nav class="nav nav-right" role="navigation" aria-label="Primary right">
-        <ul>
-          <li><a href="/support.html" data-i18n="nav.support">Support</a></li>
-          <li><a href="/privacy.html" data-i18n="nav.privacy">Policy</a></li>
-        </ul>
-      </nav>
-
-      <!-- Menu toggle (visas vid shrink/mobil) -->
-      <button class="menu-toggle" aria-controls="menu-panel" aria-expanded="false" aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Mobilmeny (döljs med [hidden]) -->
-  <div id="menu-panel" class="menu-panel" hidden>
-    <nav class="menu-panel-nav" aria-label="Mobile menu">
-      <ul>
-        <li><a href="/" data-i18n="nav.home">Home</a></li>
-        <li><a href="/news.html" data-i18n="nav.news">News</a></li>
-        <li><a href="/support.html" data-i18n="nav.support">Support</a></li>
-        <li><a href="/privacy.html" data-i18n="nav.privacy">Policy</a></li>
-      </ul>
-    </nav>
-  </div>
+  <!-- 🔁 Shared header (laddas av include.js) -->
+  <div id="header"></div>
 
   <!-- CONTENT START -->
-  <main>
+  <section class="block block-small">
+  <div class="img-placeholder-inner">
+    <img src="/assets/img/Sample1.jpg" alt="GooseHunt screenshot">
+  </div>
+
+  <h3 data-i18n="index.catchtitle">CATCH THE GOOSE, WIN THE HUNT.</h3>
+  <p data-i18n="index.catchsubtitle">A fast-paced runner game, Now on iOS & Android.</p>
+
+  <div class="store-buttons">
+    <a class="btn" href="#" data-i18n="cta.appstore">App Store</a>
+    <a class="btn" href="#" data-i18n="cta.playstore">Google Play</a>
+  </div>
+</section>
+
+
+    
     <section class="block block-small">
-      <h1 data-i18n="hero.title">Chase the Goose.</h1>
-      <h1 data-i18n="hero.title">Win the Hunt.</h1>
-      <p data-i18n="hero.subtitle">A fast-paced runner game, on Now on iOS & Android.</p>
-      <div class="store-buttons">
-        <a class="btn" href="#" data-i18n="cta.appstore">App Store</a>
-        <a class="btn" href="#" data-i18n="cta.playstore">Google Play</a>
-      </div>
-    </section>
+  <div class="img-placeholder-inner">
+    <img src="/assets/img/sample2.png" alt="GooseHunt screenshot">
+  </div>
+  <h3 data-i18n="index.changetitle">CHANGE YOUR LOOK</h3>
+  <p data-i18n="index.changesubtitle">Look sharp, chase geese, switch outfits — repeat</p>
 
-    <section class="block block-medium">
-      <h2 data-i18n="features.title">Why GooseHunt?</h2>
-      <ul class="grid">
-        <li>
-          <h3 data-i18n="features.fast.title">Fast & Smooth</h3>
-          <p data-i18n="features.fast.desc">Responsive gameplay with lane switching and powerups.</p>
-        </li>
-        <li>
-          <h3 data-i18n="features.custom.title">Customization</h3>
-          <p data-i18n="features.custom.desc">Change outfits, effects and tracks via the wardrobe.</p>
-        </li>
-        <li>
-          <h3 data-i18n="features.fair.title">Fair Play</h3>
-          <p data-i18n="features.fair.desc">Clear terms, privacy first.</p>
-        </li>
-      </ul>
-    </section>
+  </div>
+</section>
 
-    <section class="block block-medium">
-      <h2 data-i18n="features.title">Wardrobe</h2>
-      <ul class="grid">
-        <li>
-          <h3 data-i18n="features.fast.title"></h3>
-          <p data-i18n="features.fast.desc">Customize your character with clothing &amp; costumes with the rewards you earn along the way</p>
-        </li>
-      </ul>
-    </section>
+   <section class="block block--stretch-free" data-gallery>
+  <div class="gallery-main" aria-label="Swipe gallery" tabindex="0">
+    <div class="gallery-track">
+      <img src="/assets/img/sample3.png" alt="GooseHunt – city run">
+      <img src="/assets/img/sample4.png" alt="GooseHunt – powerup">
+      <img src="/assets/img/sample5.jpeg" alt="GooseHunt – scoreboard">
+      <img src="/assets/img/Sample1.jpg" alt="GooseHunt – night scene">
+      <img src="/assets/img/sample2.png" alt="GooseHunt – night scene">
+    </div>
+  </div>
 
-    <section class="block block-medium">
-      <h2 data-i18n="features.title">Different Tracks</h2>
-      <ul class="grid">
-        <li>
-          <p data-i18n="features.fair.desc">Choose your track. The geese are everywhere!</p>
-        </li>
-      </ul>
-    </section>
+  <div class="gallery-thumbs">
+    <img src="/assets/img/sample3.png" alt="" class="is-active">
+    <img src="/assets/img/sample4.png" alt="">
+    <img src="/assets/img/sample5.jpeg" alt="">
+    <img src="/assets/img/Sample1.jpg" alt="">
+    <img src="/assets/img/sample2.png" alt="">
 
+  </div>
+  <h1 class="block__header" data-i18n="index.hunttitle">NEW HUNTING GROUNDS</h1>
+  <p data-i18n="index.huntsubtitle">The geese are spreading fast… from streets to forests. We need your help to keep the chaos under control!</p>
+</section>
+ 
     <section class="block block-small">
-      <h2 data-i18n="community.title">Community</h2>
-      <p data-i18n="community.desc">Join forums, competitions and follow news.</p>
-      <a class="btn" href="#" data-i18n="cta.playstore">Forum</a>
+      <h2 data-i18n="index.leaderboardtitle">LEADERBOARD</h2>
+      <p data-i18n="index.leaderboardsubtitle">View the global leaderboards and who is in the lead for the greatest geesecatcher!</p>
+      <a class="btn" href="leaderboard.html" data-i18n="leaderboardbutton">LEADERBOARDS</a>
     </section>
   </main>
   <!-- CONTENT END -->
-   
-  <footer class="container footer" role="contentinfo">
-    <nav class="footer-nav" aria-label="Footer">
-      <ul>
-        <li><a href="/privacy.html">Privacy</a></li>
-        <li><a href="/policies.html">Policies</a></li>
-        <li><a href="/about.html">About us</a></li>
-      </ul>
-    </nav>
-    <small>© <span id="year">2025</span> GooseHunt | JOJO DELISE | Johannes Bengtson |</small>
-  </footer>
+
+  <!-- 🔁 Shared footer (laddas av include.js) -->
+  <div id="footer"></div>
 
   <!-- Scripts -->
-  <script>
-    /* Årspann */
-    (function () {
-      var start = 2025;
-      var now = new Date().getFullYear();
-      var el = document.getElementById('year');
-      if (el) el.textContent = now > start ? (start + ' - ' + now) : String(start);
-    })();
+  <!-- Laddar in header.html + footer.html och initierar: shrink-shadow, hamburgaranimation, årtal i footer -->
+  <script src="./include.js" defer></script>
 
-    /* Shrink on scroll (sätter .is-shrunk på .header) */
-    (function () {
-      const header = document.querySelector('.header');
-      const setState = () => {
-        if (!header) return;
-        header.classList.toggle('is-shrunk', window.scrollY > 10);
-      };
-      setState();
-      window.addEventListener('scroll', setState, { passive: true });
-      window.addEventListener('resize', setState);
-    })();
-
-        /* Toggle meny-panelen */
-       /* Toggle meny-panelen */
-    (function(){
-      const btn = document.querySelector('.menu-toggle');
-      const panel = document.getElementById('menu-panel');
-      const header = document.querySelector('.header');
-      if(!btn || !panel || !header) return;
-
-      const mq = window.matchMedia('(max-width: 900px)');
-
-      function setExpanded(open){
-        btn.setAttribute('aria-expanded', String(open));
-        panel.hidden = !open;
-        header.classList.toggle('menu-open', open); // tar bort header-shadow när öppen
-      }
-
-      btn.addEventListener('click', () => {
-        const open = btn.getAttribute('aria-expanded') === 'true';
-        setExpanded(!open);
-      });
-
-      panel.addEventListener('click', (e) => {
-        if(e.target.closest('a')) setExpanded(false);
-      });
-
-      // 🔧 När man växlar bredd: desktop => stäng mobilmenyn
-      function handleResize(){
-        if (!mq.matches) {        // nu är vi på desktop
-          setExpanded(false);     // stäng & återställ shadow
-        }
-      }
-      window.addEventListener('resize', handleResize);
-      handleResize();
-    })();
-
-
-  </script>
-
-  <script src="/js/nav.js" defer></script>
-  <script src="/js/i18n.js" defer></script>
-  <script src="/js/clouds.js" defer></script>
 </body>
 </html>

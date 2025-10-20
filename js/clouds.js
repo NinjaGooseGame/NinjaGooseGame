@@ -6,7 +6,7 @@
   if (root.dataset.initialized === "true") return;
   root.dataset.initialized = "true";
 
-  // Bas-styles om du inte redan har i CSS
+  // Bas-styles (fallback om inte i CSS)
   root.classList.add("clouds");
   if (!root.style.position) root.style.position = "fixed";
   if (!root.style.inset) root.style.inset = "0";
@@ -17,22 +17,33 @@
   const SRC = ["/assets/img/cloud2.png", "/assets/img/cloud3.png"];
 
   // ---- Tunables via data-* (med bra defaults) ----
-  const TOTAL = Math.max(2, parseInt(root.getAttribute("data-total-clouds") || "20", 10)); // totalt
+  const TOTAL    = Math.max(2, parseInt(root.getAttribute("data-total-clouds") || "20", 10)); // totalt
   const PER_SIDE = Math.floor(TOTAL / 2); // vänster/höger
-  const LANES = Math.max(1, parseInt(root.getAttribute("data-lanes-per-side") || "3", 10)); // lanes/sida
+  const LANES    = Math.max(1, parseInt(root.getAttribute("data-lanes-per-side") || "3", 10)); // lanes/sida
 
-  const EDGE_Y = parseFloat(root.getAttribute("data-edge-margin-y") || "6"); // % margin topp/botten
+  const EDGE_Y   = parseFloat(root.getAttribute("data-edge-margin-y") || "6"); // % margin topp/botten
 
   // Hur långt in på sidan får lanes breda ut sig (skalbar vid fler lanes)
   // Dessa kan overrideas: t.ex. data-left-span="12" data-right-span="12"
-  const BASE_SPAN = parseFloat(root.getAttribute("data-base-span") || "7.0");   // % för 1 lane
-  const PER_LANE_ADD = parseFloat(root.getAttribute("data-per-lane-add") || "2.4"); // % extra bredd / lane-1
-  const LEFT_EDGE = parseFloat(root.getAttribute("data-left-edge-x") || "4.0");     // % från vänster
-  const RIGHT_EDGE = parseFloat(root.getAttribute("data-right-edge-x") || "96.0");  // % från vänster (högerkant)
+  const BASE_SPAN     = parseFloat(root.getAttribute("data-base-span") || "7.0");   // % för 1 lane
+  const PER_LANE_ADD  = parseFloat(root.getAttribute("data-per-lane-add") || "2.4"); // % extra bredd / (lane-1)
+  const LEFT_EDGE     = parseFloat(root.getAttribute("data-left-edge-x") || "4.0");     // % från vänster
+  const RIGHT_EDGE    = parseFloat(root.getAttribute("data-right-edge-x") || "96.0");   // % från vänster (högerkant)
 
-  // Rörelse (lite snabbare & längre)
+  // Rörelse
   const SPEED_SCALE = parseFloat(root.getAttribute("data-speed-scale") || "1.15");
   const DIST_SCALE  = parseFloat(root.getAttribute("data-distance-scale") || "1.25");
+
+  // NYTT: styrbar lane-fördelning horisontellt
+  // "ease" (default, lite mer separation närmare kanten) eller "even" (helt jämn)
+  const LANE_MODE   = (root.getAttribute("data-lane-mode") || "ease").toLowerCase();
+
+  // NYTT: styrbar vertikal minsta separation och jitter (procent av viewport-höjd)
+  // Om inget anges: smart default baserat på antal moln
+  const JITTER_PCT  = root.hasAttribute("data-jitter-pct")
+    ? parseFloat(root.getAttribute("data-jitter-pct") || "0.10")
+    : 0.10; // 10% av bandets höjd runt varje slot
+  const MIN_SEP_ATTR = root.getAttribute("data-min-sep-pct"); // kan vara null -> auto
 
   // Responsiva storlekar/rörelser
   function motionRanges() {
@@ -44,45 +55,67 @@
     };
   }
 
-  // Små helpers
+  // Helpers
   const rand  = (a, b) => a + Math.random() * (b - a);
   const randi = (a, b) => Math.floor(rand(a, b + 1));
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   // Skapa vertikala slots (jämnt + jitter + min-avstånd) sorterade upp->ned
-  function verticalSlots(n, minSepPct = Math.max(3.5, 100 / Math.max(16, n * 2)), jitterPct = 0.18) {
+  function verticalSlots(n, minSepPct, jitterPct) {
+    // auto-defaults om inte explicit angivna
+    const autoMinSep = Math.max(3.5, 100 / Math.max(16, n * 2)); // funkar bra visuellt
+    const minSep = (typeof minSepPct === "number" && !Number.isNaN(minSepPct))
+      ? minSepPct
+      : autoMinSep;
+    const jitter = (typeof jitterPct === "number" && !Number.isNaN(jitterPct))
+      ? jitterPct
+      : 0.18;
+
     const ys = [];
     for (let i = 0; i < n; i++) {
       const center = ((i + 0.5) / n) * 100;
       const band = 100 / n;
-      let y = center + (Math.random() * 2 - 1) * band * jitterPct;
+      let y = center + (Math.random() * 2 - 1) * band * jitter;
       ys.push(clamp(y, EDGE_Y, 100 - EDGE_Y));
     }
     ys.sort((a, b) => a - b);
+
+    // enkel separation-pass uppåt och nedåt
     for (let i = 1; i < ys.length; i++) {
-      if (ys[i] - ys[i - 1] < minSepPct) ys[i] = clamp(ys[i - 1] + minSepPct, EDGE_Y, 100 - EDGE_Y);
+      if (ys[i] - ys[i - 1] < minSep) ys[i] = clamp(ys[i - 1] + minSep, EDGE_Y, 100 - EDGE_Y);
     }
     for (let i = ys.length - 2; i >= 0; i--) {
-      if (ys[i + 1] - ys[i] < minSepPct) ys[i] = clamp(ys[i + 1] - minSepPct, EDGE_Y, 100 - EDGE_Y);
+      if (ys[i + 1] - ys[i] < minSep) ys[i] = clamp(ys[i + 1] - minSep, EDGE_Y, 100 - EDGE_Y);
     }
     return ys;
   }
 
-  // Skapa lane X-positioner för vänster/höger som AUTOMATISKT SEPARERAR mer när lanes ökar.
-  // Vi använder en icke-linjär fördelning (ease-out) för att ge större separation mellan lanes.
+  // Skapa lane X-positioner för vänster/höger.
+  // LANE_MODE:
+  //  - "ease": icke-linjär (easeOutCubic) för trevlig visuell separation
+  //  - "even": helt jämnt fördelade centerpunkter inom spannet
   function laneXs(side /* 'left' | 'right' */, lanes) {
-    // total span inåt (ökar med lanes)
     const span = BASE_SPAN + (lanes - 1) * PER_LANE_ADD; // t.ex. 7% + 2.4%*(N-1)
     const xs = [];
+
     for (let i = 0; i < lanes; i++) {
-      const t = lanes === 1 ? 0 : i / (lanes - 1); // 0..1
-      // easeOutCubic för större separation mellan lanes
-      const eased = 1 - Math.pow(1 - t, 3);
-      if (side === "left") {
-        xs.push(LEFT_EDGE + eased * span);
+      if (LANE_MODE === "even") {
+        // Mittpunkter jämnt fördelade mellan [0..span]
+        const t = (i + 0.5) / lanes; // 0.5/lanes, 1.5/lanes, ...
+        if (side === "left") {
+          xs.push(LEFT_EDGE + t * span);
+        } else {
+          xs.push(RIGHT_EDGE - t * span);
+        }
       } else {
-        // från högerkanten inåt -> mappa från RIGHT_EDGE mot (RIGHT_EDGE - span)
-        xs.push(RIGHT_EDGE - eased * span);
+        // "ease" (default): easeOutCubic för större separation mot ytterkanterna
+        const t = lanes === 1 ? 0 : i / (lanes - 1); // 0..1
+        const eased = 1 - Math.pow(1 - t, 3);
+        if (side === "left") {
+          xs.push(LEFT_EDGE + eased * span);
+        } else {
+          xs.push(RIGHT_EDGE - eased * span);
+        }
       }
     }
     return xs;
@@ -131,20 +164,23 @@
     root.innerHTML = "";
     const { width, dist, dur } = motionRanges();
 
-    // Y-positioner upp->ned
-    const ysLeft  = verticalSlots(PER_SIDE);
-    const ysRight = verticalSlots(PER_SIDE);
+    // Läs ev. explicit min-sep från data, annars auto
+    const minSepPct = (MIN_SEP_ATTR != null && MIN_SEP_ATTR !== "")
+      ? parseFloat(MIN_SEP_ATTR)
+      : undefined;
 
-    // Lane X för vardera sida (skalbar med LANES)
+    // Y-positioner upp->ned (separerade & med mindre jitter om du sätter data-jitter-pct)
+    const ysLeft  = verticalSlots(PER_SIDE, minSepPct, JITTER_PCT);
+    const ysRight = verticalSlots(PER_SIDE, minSepPct, JITTER_PCT);
+
+    // Lane X för vardera sida (skalbar med LANES, och valbart lane-läge)
     const lanesLeft  = laneXs("left",  LANES);
     const lanesRight = laneXs("right", LANES);
 
-    // Cykla lanes i ett mönster som bryter kolumn-känslan (0,1,2, 1,2,0, 2,0,1, ...)
-    const pattern = [];
-    for (let k = 0; k < LANES; k++) pattern.push(k);
+    // Bryt kolumn-känslan lite ändå (fördelar objekt över lanes i en diagonal cykel)
     const lanePattern = [];
     for (let i = 0; i < Math.max(PER_SIDE, LANES); i++) {
-      lanePattern.push((i + Math.floor(i / LANES)) % LANES); // enkel "diagonal" cykel
+      lanePattern.push((i + Math.floor(i / LANES)) % LANES);
     }
 
     for (let i = 0; i < PER_SIDE; i++) {
@@ -174,7 +210,7 @@
 
     // Om TOTAL är udda, lägg ett extra moln på vänster sida (bevarar side-only-layouten)
     if (TOTAL % 2 === 1) {
-      const y = verticalSlots(1)[0];
+      const y = verticalSlots(1, minSepPct, JITTER_PCT)[0];
       const laneIdx = lanePattern[PER_SIDE % lanePattern.length];
       const x = lanesLeft[laneIdx];
       const w = rand(motionRanges().width[0], motionRanges().width[1]);

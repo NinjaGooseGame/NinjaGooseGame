@@ -1,0 +1,95 @@
+Privacy Policy
+Effective Date: October 06, 2025
+
+This Privacy Policy describes how GooseHunt Game (“we”, “us”, or “our”) collects, uses, and protects your personal information when you use our mobile game “GooseHunt”, our website (https://goosehuntgame.com), and any related services (collectively referred to as the “Services”).
+
+We are committed to protecting your privacy and complying with all applicable laws and regulations, including the EU General Data Protection Regulation (GDPR), the California Consumer Privacy Act (CCPA), and requirements from Apple App Store, Google Play, Unity Gaming Services, and Google Ads.
+
+---
+1. Who We Are
+Responsible party: Johannes Bengtson  
+Email: support@goosehuntgame.com  
+Country: Sweden
+
+---
+2. Information We Collect
+We collect the following categories of information when you use our Services:
+
+• **Device Information** – Device model, operating system, unique identifiers, and performance data.  
+• **Location Data** – Approximate geographic location to enable gameplay features, leaderboards, and regional services.  
+• **Usage and Gameplay Data** – Game progress, achievements, playtime, in-app interactions, and session analytics.  
+• **Purchase Data** – Information related to in-app purchases to restore and verify your transactions.  
+• **Account Data** – If you sign in using Unity Authentication or another provider, we may collect email, username, and account ID.  
+• **Cookies and Website Data** – We use cookies and similar technologies on our website for analytics and functional purposes.
+
+---
+3. How We Use Your Information
+We use collected data to:
+
+• Provide and maintain the functionality of the game and website.  
+• Save player progress, purchases, and preferences.  
+• Personalize the user experience and improve performance.  
+• Analyze usage trends and optimize gameplay.  
+• Ensure security, prevent fraud, and enforce our Terms & Conditions.  
+• Serve ads and measure ad effectiveness (with user consent).
+
+---
+4. Third Parties and Data Sharing
+We may share your information with trusted third-party partners that help us deliver our Services, including:
+
+• **Unity Technologies** – Unity Gaming Services for analytics, cloud save, ads, and authentication.  
+• **Google LLC** – Google Ads, Google Analytics, Firebase, and Google Play Services.  
+• **Apple Inc.** – App Store and Game Center services.  
+• **Service Providers** – Hosting, customer support, and payment processors.
+
+All partners comply with GDPR and/or CCPA as applicable.
+
+---
+5. Legal Basis for Processing (GDPR)
+We process your personal data on the following legal bases:
+
+• **Contractual Necessity** – To provide core gameplay features and services you requested.  
+• **Legitimate Interest** – To improve our Services and ensure integrity.  
+• **Consent** – For personalized ads, cookies, and analytics tracking.
+
+You may withdraw consent at any time by adjusting your settings or contacting us.
+
+---
+6. Your Rights
+Under GDPR and CCPA, you have the right to:
+
+• Access and receive a copy of your data.  
+• Request correction or deletion of your personal data.  
+• Object to or restrict processing.  
+• Withdraw consent for data processing.  
+• Request data portability.  
+• Opt out of personalized ads and analytics.
+
+To exercise any of these rights, contact us at **support@goosehuntgame.com**.
+
+---
+7. Data Retention and Security
+We retain data only as long as necessary for the purposes outlined in this policy. We implement technical and organizational measures to protect your data against unauthorized access, loss, misuse, or alteration.
+
+---
+8. International Transfers
+Your information may be transferred and processed outside the EU/EEA, including in the United States. All such transfers comply with applicable data protection laws and include safeguards such as Standard Contractual Clauses (SCCs).
+
+---
+9. Children’s Privacy
+Our Services are not directed to children under the age of 13. We do not knowingly collect personal information from minors. If you believe we have collected data from a child, please contact us immediately.
+
+---
+10. Changes to This Privacy Policy
+We may update this Privacy Policy periodically. The latest version will always be available on our website. We encourage you to review this page regularly to stay informed about our practices.
+
+---
+11. Contact Us
+If you have any questions, concerns, or requests regarding this Privacy Policy, please contact:
+
+Johannes Bengtson  
+Email: support@goosehuntgame.com  
+Country: Sweden
+
+---
+© 2025 GooseHunt Game. All rights reserved.
