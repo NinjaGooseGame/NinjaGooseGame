@@ -215,3 +215,85 @@ function tryImage(url, timeoutMs = 4000) {
   setSpacer();
   onScroll();
 })();
+  function initHeaderBehavior(root = document) {
+    const header = root.querySelector('.header');
+    const btn = root.querySelector('.menu-toggle');
+    const panel = root.querySelector('#menu-panel');
+
+    // ===== Scroll lock helpers (stabilt även på iOS) =====
+    let scrollY = 0;
+    function lockScroll() {
+      scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      // dämpa "rubber band" på iOS
+      document.documentElement.style.overscrollBehavior = 'none';
+    }
+    function unlockScroll() {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.overscrollBehavior = '';
+      window.scrollTo(0, scrollY);
+    }
+
+    // ===== Shrink on scroll (toggle .is-shrunk) =====
+    const onScroll = () => {
+      // Frys shrink när mobilmeny är öppen
+      if (document.body.classList.contains('menu-open')) {
+        const h = header?.offsetHeight || 0;
+        document.body.style.setProperty('--header-spacer', `${h}px`);
+        return;
+      }
+      if (!header) return;
+      const shrink = window.scrollY > 8;
+      header.classList.toggle('is-shrunk', shrink);
+      const h = header.offsetHeight;
+      document.body.style.setProperty('--header-spacer', `${h}px`);
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ===== Mobile menu toggle with aria + shadow + SCROLL LOCK =====
+    if (btn && panel && header) {
+      const mq = window.matchMedia('(max-width: 900px)');
+
+      function setExpanded(open) {
+        btn.setAttribute('aria-expanded', String(open));
+        panel.hidden = !open;
+
+        // visuellt läge på headern
+        header.classList.toggle('menu-open', open);
+
+        // body-klass för logik som tittar på den (inkl. onScroll ovan)
+        document.body.classList.toggle('menu-open', open);
+
+        // lås/öppna scroll
+        if (open) lockScroll(); else unlockScroll();
+      }
+
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        setExpanded(!open);
+      });
+
+      // Stäng när man klickar en länk i panelen
+      panel.addEventListener('click', (e) => {
+        if (e.target.closest('a')) setExpanded(false);
+      });
+
+      // Stäng när man går till desktop-läge
+      function handleResize() {
+        if (!mq.matches) setExpanded(false);
+      }
+      window.addEventListener('resize', handleResize);
+      handleResize();
+    }
+  }
