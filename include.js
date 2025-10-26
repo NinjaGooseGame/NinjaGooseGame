@@ -3,9 +3,13 @@ async function loadHTML(id, file) {
   if (!el) return null;
 
   try {
-    const res = await fetch(file, { cache: "no-cache" });
+    // Gör sökvägen kompatibel med GitHub Pages (tar hänsyn till repo-namn)
+    const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+    const url = `${base}${file}`;
+    const res = await fetch(url, { cache: "no-cache" });
+
     if (!res.ok) {
-      console.error("include failed:", file, res.status);
+      console.error("include failed:", url, res.status);
       return el; // hoppa över injicering vid 404/fel
     }
 
