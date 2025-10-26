@@ -1,17 +1,11 @@
+// include.js
 async function loadHTML(id, file) {
   const el = document.getElementById(id);
   if (!el) return null;
 
   try {
-    // ✅ Dynamisk bas-sökväg som fungerar både lokalt och på GitHub Pages
-    let base = window.location.pathname;
-    if (!base.endsWith("/")) base = base.replace(/\/[^/]*$/, "/");
-
-    // Upptäck automatiskt repo-namn (t.ex. /NinjaGooseGame/)
-    const match = base.match(/^\/([^/]+)\//);
-    const repoPath = match ? `/${match[1]}/` : "/";
-    const url = `${window.location.origin}${repoPath}${file}`;
-
+    // ✅ Bygg en absolut URL utifrån dokumentets baseURI (fungerar lokalt, på GitHub Pages och eget domän)
+    const url = new URL(file, document.baseURI).href;
     const res = await fetch(url, { cache: "no-cache" });
 
     if (!res.ok) {
@@ -38,10 +32,11 @@ const onScroll = () => {
   // Frys shrink när mobilmeny är öppen
   if (document.body.classList.contains('menu-open')) {
     // uppdatera spacer så panelen alltid ligger tight mot headern
-    const h = header.offsetHeight;
+    const h = header?.offsetHeight || 0;
     document.body.style.setProperty('--header-spacer', `${h}px`);
     return;
   }
+  if (!header) return;
   const shrink = window.scrollY > 8;
   header.classList.toggle('is-shrunk', shrink);
 
@@ -88,11 +83,27 @@ function initFooterYear(root = document) {
 
 // Bootstrap: load shared header & footer then init behaviors
 (async () => {
-const headerHost = await loadHTML("header", "./header.html");
-if (headerHost) initHeaderBehavior(headerHost);
+  // Ladda header
+  const headerHost = await loadHTML("header", "./header.html");
+  if (headerHost) {
+    initHeaderBehavior(headerHost);
 
-const footerHost = await loadHTML("footer", "./footer.html");
-if (footerHost) initFooterYear(footerHost);
+    // ✅ Patcha loggans src efter injicering så den alltid använder dokumentets baseURI
+    const logo = headerHost.querySelector('img.logo');
+    if (logo) {
+      try {
+        const current = logo.getAttribute('src') || '';
+        const fixed = new URL(current, document.baseURI).href;
+        logo.setAttribute('src', fixed);
+      } catch (e) {
+        console.warn('Logo URL fix failed', e);
+      }
+    }
+  }
+
+  // Ladda footer
+  const footerHost = await loadHTML("footer", "./footer.html");
+  if (footerHost) initFooterYear(footerHost);
 })();
 
 // ===== Header stickiness guard =====
