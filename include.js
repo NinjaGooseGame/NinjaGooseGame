@@ -3,9 +3,15 @@ async function loadHTML(id, file) {
   if (!el) return null;
 
   try {
-    // Gör sökvägen kompatibel med GitHub Pages (tar hänsyn till repo-namn)
-    const base = window.location.pathname.replace(/\/[^/]*$/, '/');
-    const url = `${base}${file}`;
+    // ✅ Dynamisk bas-sökväg som fungerar både lokalt och på GitHub Pages
+    let base = window.location.pathname;
+    if (!base.endsWith("/")) base = base.replace(/\/[^/]*$/, "/");
+
+    // Upptäck automatiskt repo-namn (t.ex. /NinjaGooseGame/)
+    const match = base.match(/^\/([^/]+)\//);
+    const repoPath = match ? `/${match[1]}/` : "/";
+    const url = `${window.location.origin}${repoPath}${file}`;
+
     const res = await fetch(url, { cache: "no-cache" });
 
     if (!res.ok) {
@@ -88,6 +94,7 @@ if (headerHost) initHeaderBehavior(headerHost);
 const footerHost = await loadHTML("footer", "./footer.html");
 if (footerHost) initFooterYear(footerHost);
 })();
+
 // ===== Header stickiness guard =====
 (() => {
   const header = document.querySelector('.header');
