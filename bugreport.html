@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="bug.metatitle">Report a Bug – GooseHunt</title>
+  <meta name="description" content="Report issues and bugs you encounter in GooseHunt." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="./js/base-path.js" defer></script>
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css" />
+  <link rel="stylesheet" href="./assets/css/consent.css">
+
+  <!-- Shared JS -->
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script>
+  <script src="./js/consent.js" defer></script>
+  <script src="https://cdn.skypack.dev/@hotwired/turbo" defer></script>
+
+  <style>
+    .summary-list { margin: 8px 0 16px; }
+    .summary-list dt { font-weight:600; margin-top:10px; }
+    .summary-list dd { margin:4px 0 0 0; white-space:pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+
+  <main>
+    <section class="policy-intro">
+      <div class="block block--intro">
+        <h1 class="policy-intro__title" data-i18n="bug.title">REPORT A BUG</h1>
+        <p class="policy-intro__desc" data-i18n="bug.subtitle">Found something odd in GooseHunt? Help us squash it! Fill in the details below.</p>
+      </div>
+    </section>
+
+    <form id="bugForm" class="policy-accordion" aria-label="Bug Report">
+      <!-- Section 1 -->
+      <article class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="false" aria-controls="b1">
+          <span class="policy-title" data-i18n="bug.s1title">1) Bug Summary & Type</span>
+          <img class="faq-icon" src="./assets/img/smileys/1F41E_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+        <div id="b1" class="faq-panel" role="region" hidden>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="title" data-i18n="bug.s1shortlabel">Short title *</label>
+              <input id="title" name="title" class="input" type="text" required
+                     placeholder="e.g., Crash when starting City track"
+                     data-i18n-placeholder="bug.s1shortplaceholder">
+            </div>
+
+            <div class="form-field">
+              <label for="severity" data-i18n="bug.s1severitylabel">Severity *</label>
+              <select id="severity" name="severity" class="select" required>
+                <option value="" disabled selected data-i18n="bug.s1severitychoose">Choose severity…</option>
+                <option data-i18n="bug.s1severityoptcritical">Critical – crash/data loss</option>
+                <option data-i18n="bug.s1severityopthigh">High – blocks gameplay</option>
+                <option data-i18n="bug.s1severityoptmedium">Medium – impacts experience</option>
+                <option data-i18n="bug.s1severityoptlow">Low – cosmetic/typo</option>
+              </select>
+            </div>
+
+            <div class="form-field form-field--full">
+              <label for="description" data-i18n="bug.s1descriptionlabel">Description *</label>
+              <textarea id="description" name="description" class="textarea" rows="4" required
+                        placeholder="What happened? Where in the game? Any error message?"
+                        data-i18n-placeholder="bug.s1descriptionplaceholder"></textarea>
+            </div>
+          </div>
+
+          <div class="section-nav">
+            <button type="button" class="btn next-section" data-i18n="bug.navnext">Next</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Section 2 -->
+      <article class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="false" aria-controls="b2">
+          <span class="policy-title" data-i18n="bug.s2title">2) Platform, Device & Version</span>
+          <img class="faq-icon" src="./assets/img/smileys/1F4F1_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+        <div id="b2" class="faq-panel" role="region" hidden>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="platform" data-i18n="bug.s2platformlabel">Platform</label>
+              <select id="platform" name="platform" class="select">
+                <option data-i18n="bug.s2platformchoose" selected>Choose platform…</option>
+                <option>iOS</option>
+                <option>Android</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="device" data-i18n="bug.s2devicelabel">Device model</label>
+              <input id="device" name="device" class="input" type="text" placeholder="e.g., iPhone 12 / Samsung S21" data-i18n-placeholder="bug.s2deviceplaceholder">
+            </div>
+
+            <div class="form-field">
+              <label for="osVersion" data-i18n="bug.s2oslabel">OS version</label>
+              <input id="osVersion" name="osVersion" class="input" type="text" placeholder="e.g., iOS 18.0 / Android 15" data-i18n-placeholder="bug.s2osplaceholder">
+            </div>
+
+            <div class="form-field">
+              <label for="appVersion" data-i18n="bug.s2applabel">App version</label>
+              <input id="appVersion" name="appVersion" class="input" type="text" placeholder="e.g., 1.0.3 (Build 45)" data-i18n-placeholder="bug.s2appplaceholder">
+            </div>
+
+            <input id="ua" name="ua" type="hidden">
+          </div>
+
+          <div class="section-nav">
+            <button type="button" class="back-btn" aria-label="Go back"></button>
+            <button type="button" class="btn next-section" data-i18n="bug.navnext">Next</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Section 3 -->
+      <article class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="false" aria-controls="b3">
+          <span class="policy-title" data-i18n="bug.s3title">3) Attachments (screenshots/video/log)</span>
+          <img class="faq-icon" src="./assets/img/smileys/E251_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+        <div id="b3" class="faq-panel" role="region" hidden>
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="files" data-i18n="bug.s3fileslabel">Add files</label>
+              <input id="files" name="files" class="input" type="file" accept="image/*,video/*,.log,.txt" multiple>
+              <small data-i18n="bug.s3filestip">Tip: screenshots of error and a short screen recording help a LOT.</small>
+            </div>
+          </div>
+          <div class="section-nav">
+            <button type="button" class="back-btn" aria-label="Go back"></button>
+            <button type="button" class="btn next-section" data-i18n="bug.navnext">Next</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Section 4 -->
+      <article class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="false" aria-controls="b4">
+          <span class="policy-title" data-i18n="bug.s4title">4) Contact & Consent</span>
+          <img class="faq-icon" src="./assets/img/smileys/260E_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+        <div id="b4" class="faq-panel" role="region" hidden>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="email" data-i18n="bug.s4emaillabel">Email *</label>
+              <input id="email" name="email" class="input" type="email" required placeholder="your@email.com" data-i18n-placeholder="bug.s4emailplaceholder">
+            </div>
+              <div class="form-field">
+                <label for="username" data-i18n="bug.s4usernamelabel">Username (optional)</label>
+                <input id="username" name="username" class="input" type="text"
+                      placeholder="Your in-game name"
+                      data-i18n-placeholder="bug.s4usernameplaceholder">
+              </div>
+              <div class="form-field">
+                <label for="confirmUsername" data-i18n="bug.s4confirmlabel">Confirm Username</label>
+                <input id="confirmUsername" name="confirmUsername" class="input" type="text"
+                      placeholder="Type username again"
+                      data-i18n-placeholder="bug.s4confirmplaceholder">
+                <small id="usernameMismatch" class="form-hint label--error"
+                      data-i18n="bug.s4confirmmismatch" hidden>Usernames don’t match.</small>
+              </div>
+
+            <div class="form-field form-field--full">
+              <label class="checkbox">
+                <input id="okToContact" name="okToContact" type="checkbox" checked>
+                <span data-i18n="bug.s4oktocontact">OK to contact me for more info</span>
+              </label>
+            </div>
+
+            <div class="form-field form-field--full">
+              <label class="checkbox">
+                <input id="gdpr" name="gdpr" type="checkbox" required>
+                <span data-i18n="bug.s4gdpr">I consent to the processing of my report for support and QA purposes</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section-nav">
+            <button type="button" class="back-btn" aria-label="Go back"></button>
+            <button type="submit" class="btn next-section" id="submitBtn" data-i18n="bug.navsubmit">Submit Report</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Summary (visible after submit) -->
+      <div id="summary" class="block" style="display:none; max-width:680px;">
+        <h3 data-i18n="bug.summarytitle">Report Summary</h3>
+        <p>
+          <strong data-i18n="bug.summarysubmitted">Submitted:</strong>
+          <time id="summaryTime"></time>
+        </p>
+        <dl id="summaryList" class="summary-list"></dl>
+      </div>
+
+      <!-- Thank-you -->
+      <div id="thankyou" class="block" style="display:none; max-width:680px;">
+        <h2 data-i18n="bug.thankstitle">Thanks! 🪲➡️🧯</h2>
+        <p data-i18n="bug.thanksbody">We’ve received your report. We’ll investigate and squash this bug.</p>
+        <div class="thank-nav">
+          <a href="./" class="btn-yellow" data-i18n="bug.thanksbackhome">Back to Homepage</a>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+  (function(){
+    const ACC = document.getElementById('bugForm');
+    const uaEl = document.getElementById('ua');
+    if(uaEl){ uaEl.value = navigator.userAgent || ''; }
+
+    const items = Array.from(ACC.querySelectorAll('.faq-item'));
+    const toggles = items.map(it => it.querySelector('.faq-toggle'));
+    const panels  = items.map(it => it.querySelector('.faq-panel'));
+
+    // Disable manual toggle – navigation via Next/Back only
+    toggles.forEach(btn => { btn.classList.add('toggle-disabled'); btn.setAttribute('aria-disabled','true'); });
+
+    function openIndex(i, shouldScroll = true){
+      items.forEach((it, idx) => {
+        const btn = toggles[idx], panel = panels[idx], isOpen = idx === i;
+        it.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+        panel.hidden = !isOpen;
+      });
+      if (shouldScroll) items[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Vid första laddning: öppna utan att scrolla
+    openIndex(0, false);
+
+    function setError(el, hasError){
+      if(!el) return;
+      el.classList.toggle('input--error', !!hasError);
+      el.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+      const id = el.getAttribute('id');
+      const label = id ? ACC.querySelector(`label[for="${id}"]`) : null;
+      label?.classList.toggle('label--error', !!hasError);
+    }
+
+    // ===== Hjälpfunktioner för sektion-validering =====
+    function isEmptyInput(el){ return !el.value || !el.value.trim(); }
+    function isEmptySelect(el){
+      const v = (el.value || '').trim();
+      return v === '' || el.selectedIndex === 0 || /^(choose|välj)/i.test(v);
+    }
+    function validateIds(ids){
+      const invalid = [];
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        const empty = el.tagName === 'SELECT' ? isEmptySelect(el) : isEmptyInput(el);
+        setError(el, empty);
+        if(empty) invalid.push(el);
+      });
+      if(invalid.length){ invalid[0].focus(); }
+      return invalid.length === 0;
+    }
+
+    // ===== Beskrivning: live-räknare (min 30, max 500) =====
+    const MIN_CHARS = 30, MAX_CHARS = 500;
+    const desc = document.getElementById('description');
+    let descHint = null;
+
+    // nya flaggor
+    let descTouched = false;     // blir true efter att användaren lämnat fältet en gång
+    let section1Validated = false; // blir true när man trycker Next i sektion 1
+    let submitAttempted = false; // blir true när man trycker Submit
+
+    function ensureDescHint(){
+      if(!desc) return null;
+      if(!descHint){
+        descHint = document.createElement('small');
+        descHint.id = 'descCharHint';
+        descHint.className = 'form-hint';
+        desc.insertAdjacentElement('afterend', descHint);
+      }
+      return descHint;
+    }
+
+    function updateDescUI(){
+      if(!desc) return true;
+      const len  = desc.value.trim().length;
+      const hint = ensureDescHint();
+
+      const tooShort = len < MIN_CHARS;
+      const tooLong  = len > MAX_CHARS;
+      const atMax    = len === MAX_CHARS;
+
+      // Visa röd status ENDAST efter interaktion/validering
+      const mayShowError = descTouched || section1Validated || submitAttempted;
+
+      if(tooShort){
+        if(mayShowError){
+          setError(desc, true);
+          hint.textContent = `Please write at least ${MIN_CHARS} characters. (${len}/${MIN_CHARS})`;
+          hint.classList.add('label--error');
+        } else {
+          // neutralt läge vid sidanstart: ingen rödmarkering
+          setError(desc, false);
+          hint.textContent = `(${len}/${MAX_CHARS})`;
+          hint.classList.remove('label--error');
+          hint.style.color = '#9aa0a6';
+        }
+        return !mayShowError; // giltigt = false om vi visade fel
+      }
+
+      if(tooLong){
+        if(mayShowError){
+          setError(desc, true);
+          hint.textContent = `Too long. Maximum ${MAX_CHARS} characters allowed. (${len}/${MAX_CHARS})`;
+          hint.classList.add('label--error');
+        } else {
+          setError(desc, false);
+          hint.textContent = `(${len}/${MAX_CHARS})`;
+          hint.classList.remove('label--error');
+          hint.style.color = '#9aa0a6';
+        }
+        return false;
+      }
+
+      // giltigt (mellan 30..500)
+      setError(desc, false);
+      if(atMax){
+        hint.textContent = `max ${MAX_CHARS} characters (${len}/${MAX_CHARS})`;
+        hint.classList.add('label--error');
+        hint.style.color = '';
+      } else {
+        hint.textContent = `(${len}/${MAX_CHARS})`;
+        hint.classList.remove('label--error');
+        hint.style.color = '#9aa0a6';
+      }
+      return true;
+    }
+
+    if(desc){
+      // markera att användaren varit i fältet först när man lämnar det
+      desc.addEventListener('blur', () => { descTouched = true; updateDescUI(); });
+      desc.addEventListener('input', updateDescUI);
+      updateDescUI(); // initial: neutral räknare, INTE rödmarkering
+    }
+
+    // Next/Back
+    ACC.addEventListener('click', (e)=>{
+      const next = e.target.closest('.next-section');
+      const back = e.target.closest('.back-btn');
+      const currentIndex = panels.findIndex(p => !p.hidden);
+
+      // Definiera obligatoriska fält per sektion
+      const REQUIRED = {
+        0: ['title','severity','description'], // Sektion 1
+        1: ['platform','device'],             // Sektion 2
+        2: [],                                // Sektion 3
+      };
+
+      if(next){
+        // Validera obligatoriska fält
+        const ids = REQUIRED[currentIndex] || [];
+        if(ids.length && !validateIds(ids)) return;
+
+        // Teckenkrav för beskrivning (endast sektion 1)
+        if(currentIndex === 0){
+          if(!updateDescUI()){
+            desc?.focus();
+            return; // blockera navigation
+          }
+          section1Validated = true; // markera att vi försökt gå vidare från sektion 1
+        }
+
+        openIndex(Math.min(items.length-1, currentIndex+1));
+      }
+
+      if(back){
+        openIndex(Math.max(0, currentIndex-1));
+      }
+    });
+
+    function filesToBase64List(fileList){
+      if(!fileList || !fileList.length) return Promise.resolve([]);
+      const readers = [];
+      for(const f of fileList){
+        readers.push(new Promise((resolve)=>{
+          const r = new FileReader();
+          r.onload = () => resolve({ name:f.name, type:f.type, size:f.size, data:r.result });
+          r.readAsDataURL(f);
+        }));
+      }
+      return Promise.all(readers);
+    }
+
+    function checkUsernameMatch(){
+      const u = document.getElementById('username');
+      const c = document.getElementById('confirmUsername');
+      if(!u || !c) return true;
+      const match = (u.value.trim() === c.value.trim()) || (!u.value.trim() && !c.value.trim());
+      setError(c, !match);
+      return match;
+    }
+    function checkUsernameFilled() {
+      const u = document.getElementById('username');
+      const c = document.getElementById('confirmUsername');
+      const uVal = u.value.trim();
+      const cVal = c.value.trim();
+      if ((uVal && !cVal) || (!uVal && cVal)) {
+        setError(u, true); setError(c, true); return false;
+      } else { setError(u, false); setError(c, false); return true; }
+    }
+
+    // --- Livevalidering för username-paret ---
+    (function(){
+      const u = document.getElementById('username');
+      const c = document.getElementById('confirmUsername');
+      if(!u || !c) return;
+      const debounce = (fn, ms=120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+      const liveValidate = debounce(()=>{ if(checkUsernameFilled()) checkUsernameMatch(); }, 120);
+      ['input','blur'].forEach(evt=>{ u.addEventListener(evt, liveValidate); c.addEventListener(evt, liveValidate); });
+    })();
+
+    const ENDPOINT = null;
+    const form = document.getElementById('bugForm');
+    const thank = document.getElementById('thankyou');
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      submitAttempted = true;
+
+      // Beskrivning: teckenkrav även vid submit
+      if(!updateDescUI()){ desc?.focus(); return; }
+
+      // Username-par
+      if(!checkUsernameFilled() || !checkUsernameMatch()){
+        document.getElementById('confirmUsername')?.focus(); return;
+      }
+
+      const gdpr = document.getElementById('gdpr');
+      if(!gdpr?.checked){ gdpr.focus(); return; }
+
+      const emailField = document.getElementById('email');
+      const email = emailField.value?.trim();
+      if(!email){ setError(emailField,true); emailField.focus(); return; }
+      setError(emailField,false);
+
+      const payload = {
+        title: form.title.value?.trim(),
+        severity: form.severity.value,
+        description: form.description.value?.trim(),
+        platform: form.platform.value,
+        device: form.device.value?.trim(),
+        osVersion: form.osVersion.value?.trim(),
+        appVersion: form.appVersion.value?.trim(),
+        ua: form.ua.value,
+        email,
+        okToContact: !!form.okToContact.checked,
+        username: form.username?.value?.trim() || null,
+        confirmUsername: form.confirmUsername?.value?.trim() || null,
+        timestamp: new Date().toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+      };
+
+      const files = document.getElementById('files')?.files;
+      const attachments = await filesToBase64List(files);
+      if(attachments.length) payload.attachments = attachments;
+
+      console.log('[BugReport] payload →', payload);
+
+      if(ENDPOINT){
+        try{
+          const res = await fetch(ENDPOINT,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+          if(!res.ok) throw new Error('Bad response');
+        }catch(err){ alert('Could not send to server. Check console for payload.'); }
+      }
+
+      // Build attachments summary (filenames only)
+      const files2 = document.getElementById('files')?.files;
+      let attachmentList = [];
+      if (files2 && files2.length) {
+        attachmentList = Array.from(files2).map(f => ({ name: f.name, type: f.type, size: f.size }));
+      }
+
+      // Render summary
+      const summaryEl = document.getElementById('summary');
+      const summaryTimeEl = document.getElementById('summaryTime');
+      const summaryListEl = document.getElementById('summaryList');
+
+      const submittedLocal = new Date(payload.timestamp).toLocaleString('sv-SE', {
+        timeZone: 'Europe/Stockholm',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      if(summaryTimeEl){ summaryTimeEl.textContent = submittedLocal + ' (Europe/Stockholm)'; }
+
+      const rows = [
+        { labelKey: 'Title', value: payload.title },
+        { labelKey: 'Severity', value: payload.severity },
+        { labelKey: 'Description', value: payload.description },
+        { labelKey: 'Platform', value: payload.platform },
+        { labelKey: 'Device', value: payload.device },
+        { labelKey: 'OS version', value: payload.osVersion },
+        { labelKey: 'Browser/OS', value: payload.ua },
+        { labelKey: 'Appversion', value: payload.appVersion },
+        { labelKey: 'Email', value: payload.email },
+        { labelKey: 'Follow-up possible', value: payload.okToContact ? 'Yes' : 'No' },
+        { labelKey: 'Username', value: payload.username || '' },
+        { labelKey: 'Attachments', value: attachmentList.length ? attachmentList.map(a => `${a.name} (${a.type||'file'})`).join('\n') : '' },
+      ];
+
+      if(summaryListEl){
+        summaryListEl.innerHTML = '';
+        rows.forEach(row => {
+          if (row.value && String(row.value).trim().length) {
+            const dt = document.createElement('dt');
+            dt.setAttribute('data-i18n', row.labelKey);
+            dt.textContent = window.i18n?.t ? i18n.t(row.labelKey) : row.labelKey;
+            const dd = document.createElement('dd');
+            dd.textContent = row.value;
+            summaryListEl.append(dt, dd);
+          }
+        });
+      }
+
+      const exportObj = { ...payload };
+      if(exportObj.attachments){ delete exportObj.attachments; }
+      exportObj.attachments = attachmentList;
+
+      const exportJson = JSON.stringify(exportObj, null, 2);
+      const blob = new Blob([exportJson], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const downloadBtn = document.getElementById('downloadSummary');
+      if(downloadBtn){ downloadBtn.href = url; }
+
+      const copyBtn = document.getElementById('copySummary');
+      if(copyBtn){
+        copyBtn.onclick = async () => {
+          try{
+            await navigator.clipboard.writeText(exportJson);
+            copyBtn.textContent = (window.i18n?.t?.('bug.summarycopied') || 'Copied!');
+            setTimeout(()=> copyBtn.textContent = (window.i18n?.t?.('bug.summarycopy') || 'Copy summary'), 1500);
+          }catch(e){ alert('Could not copy'); }
+        };
+      }
+
+      try{ localStorage.setItem('ghLastBugReport', exportJson); }catch(_){}
+
+      form.reset();
+      if(uaEl){ uaEl.value = navigator.userAgent || ''; }
+
+      panels.forEach(p => p.hidden = true);
+      toggles.forEach(t => t.setAttribute('aria-expanded','false'));
+      if(thank){ thank.style.display='block'; }
+      const summaryEl2=document.getElementById('summary'); if(summaryEl2){ summaryEl2.style.display='block'; summaryEl2.scrollIntoView({behavior:'smooth'}); }
+    });
+  })();
+  </script>
+
+  <script>
+  (function () {
+    // Små helpers
+    const q = (s, r=document) => r.querySelector(s);
+    const toggleErr = (el, on) => { if(el){ el.classList.toggle('input--error', !!on); el.setAttribute('aria-invalid', on ? 'true':'false'); } };
+    const t = (k, fb) => (window.i18n?.t?.(k) || fb);
+
+    const form = q('#bugForm');
+    if (!form) return;
+
+    const userField    = q('#username');
+    const confirmField = q('#confirmUsername');
+    const emailField   = q('#email');
+    const gdpr         = q('#gdpr');
+
+    // Skapa hint <small> om den saknas i HTML
+    let mismatchHint = q('#usernameMismatch');
+    if (!mismatchHint && confirmField) {
+      mismatchHint = document.createElement('small');
+      mismatchHint.id = 'usernameMismatch';
+      mismatchHint.className = 'form-hint label--error';
+      mismatchHint.dataset.i18n = 'bug.s4confirmmismatch';
+      mismatchHint.textContent = t('bug.s4confirmmismatch', "Usernames don’t match.");
+      mismatchHint.hidden = true;
+      confirmField.insertAdjacentElement('afterend', mismatchHint);
+    }
+
+    // ––––– Username-par
+    function ghCheckUserFilled(){
+      if(!userField || !confirmField) return true;
+      const u = (userField.value || '').trim();
+      const c = (confirmField.value || '').trim();
+      const oneMissing = (u && !c) || (!u && c);
+      toggleErr(userField, oneMissing);
+      toggleErr(confirmField, oneMissing);
+      if (oneMissing && mismatchHint) mismatchHint.hidden = true;
+      return !oneMissing;
+    }
+    function ghCheckUserMatch(){
+      if(!userField || !confirmField) return true;
+      const u = (userField.value || '').trim();
+      const c = (confirmField.value || '').trim();
+      const both = !!u && !!c;
+      const mismatch = both && u !== c;
+      toggleErr(confirmField, mismatch);
+      if (mismatchHint) mismatchHint.hidden = !mismatch;
+      if (mismatch) confirmField.setCustomValidity(t('bug.s4confirmmismatch', "Usernames don’t match."));
+      else confirmField.setCustomValidity('');
+      return !mismatch;
+    }
+
+    // Debounce
+    function db(fn, ms=120){ let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), ms); }; }
+
+    // Livevalidering username/confirm
+    if (userField && confirmField){
+      const liveUser = db(()=>{ const ok=ghCheckUserFilled(); if(ok) ghCheckUserMatch(); }, 120);
+      ['input','blur'].forEach(evt=>{
+        userField.addEventListener(evt, liveUser);
+        confirmField.addEventListener(evt, liveUser);
+      });
+    }
+
+    // E-post: live markeringslogik
+    function ghEmailOk(){
+      if(!emailField) return true;
+      const valid = emailField.checkValidity();
+      toggleErr(emailField, !valid);
+      return valid;
+    }
+    if (emailField){
+      const liveEmail = db(()=>ghEmailOk(), 100);
+      emailField.addEventListener('input', liveEmail);
+      emailField.addEventListener('blur', liveEmail);
+    }
+
+    // Capture submit tidigt (utan att störa din ordinarie handler)
+    form.addEventListener('submit', function(e){}, true);
+    form.addEventListener('submit', function(e){
+      let ok = true;
+      if (gdpr && !gdpr.checked) { ok = false; gdpr.focus({preventScroll:false}); }
+      if (!ghEmailOk()){ ok = false; emailField?.focus({preventScroll:false}); }
+      if (!ghCheckUserFilled() || !ghCheckUserMatch()){ ok = false; confirmField?.focus({preventScroll:false}); }
+
+      if (!ok){ e.preventDefault(); e.stopImmediatePropagation(); return false; }
+      return true;
+    }, true);
+
+    if (emailField && emailField.value) ghEmailOk();
+    if (userField && confirmField && (userField.value || confirmField.value)){
+      ghCheckUserFilled(); ghCheckUserMatch();
+    }
+  })();
+  </script>
+</body>
+</html>

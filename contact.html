@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="contact.metatitle">Contact – GooseHunt</title>
+  <meta name="description" content="Get in touch with the GooseHunt team." />
+  
+  <script src="./js/base-path.js" defer></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css" />
+  <link rel="stylesheet" href="./assets/css/consent.css" />
+
+  <!-- Shared JS -->
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script>
+  <script src="./js/consent.js" defer></script>
+
+  <style>
+    /* liten räknare under meddelande */
+    .word-counter{ font-size:.85rem; color:#666; margin-top:-2px }
+    .input--error + .word-counter{ color:#e53935 }
+    /* summary list layout (snygg tvåkolumn) */
+    #contactSummary .summary-list{
+      display:grid; grid-template-columns:minmax(160px,260px) minmax(0,1fr);
+      gap:10px 0; text-align:left;
+    }
+    #contactSummary dt{ font-weight:700; margin:0 }
+    #contactSummary dt::after{ content:":"; margin-right:6px }
+    #contactSummary dd{ margin:0; white-space:pre-wrap }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+
+  <main>
+    <!-- Intro -->
+    <section class="policy-intro">
+      <div class="block block--intro">
+        <h1 class="policy-intro__title" data-i18n="contact.title">CONTACT US</h1>
+        <p class="policy-intro__desc" data-i18n="contact.subtitle">
+          Send us a message and we’ll get back to you as soon as we can.
+        </p>
+      </div>
+    </section>
+
+    <section id="contactAccordion" class="policy-accordion" aria-label="Contact">
+      <!-- (1) Form block -->
+      <article id="contactItem" class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="true" aria-controls="c1">
+          <span class="policy-title" data-i18n="contact.formtitle">1) Send a Message</span>
+          <img class="faq-icon" src="./assets/img/smileys/2709_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+
+        <div id="c1" class="faq-panel" role="region">
+          <form id="contactForm" novalidate>
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="email" data-i18n="contact.emaillabel">Email *</label>
+                <input id="email" name="email" class="input" type="email" required
+                       placeholder="you@example.com" data-i18n-placeholder="contact.emailph">
+              </div>
+
+              <div class="form-field">
+                <label for="emailConfirm" data-i18n="contact.emaillabelforget">Confirm email *</label>
+                <input id="emailConfirm" name="emailConfirm" class="input" type="email" required
+                       placeholder="Type email again" data-i18n-placeholder="contact.emailconfirmph">
+                <small id="emailMismatch" class="form-hint label--error" hidden
+                       data-i18n="contact.emailmismatch">Emails don’t match.</small>
+              </div>
+
+              <div class="form-field">
+                <label for="firstName" data-i18n="contact.firstnamelabel">First name *</label>
+                <input id="firstName" name="firstName" class="input" type="text" required
+                       placeholder="Jane" data-i18n-placeholder="contact.firstnameph">
+              </div>
+
+              <div class="form-field">
+                <label for="lastName" data-i18n="contact.lastnamelabel">Last name</label>
+                <input id="lastName" name="lastName" class="input" type="text"
+                       placeholder="Doe" data-i18n-placeholder="contact.lastnameph">
+              </div>
+
+              <div class="form-field">
+                <label for="subject" data-i18n="contact.subjectlabel">Subject *</label>
+                <input id="subject" name="subject" class="input" type="text" required
+                       placeholder="Question about…" data-i18n-placeholder="contact.subjectph">
+              </div>
+
+              <div class="form-field">
+                <label for="phone" data-i18n="contact.phonelabel">Phone</label>
+                <input id="phone" name="phone" class="input" type="tel"
+                       placeholder="+46 70 123 45 67" data-i18n-placeholder="contact.phoneph">
+              </div>
+
+              <div class="form-field form-field--full">
+                <label for="message" data-i18n="contact.messagelabel">Message * (max 500 words)</label>
+                <textarea id="message" name="message" class="textarea" rows="5" required
+                          placeholder="Write your message here…" data-i18n-placeholder="contact.messageph"></textarea>
+                <div class="word-counter">
+                  <span id="wordCount">0</span>/<span id="wordLimit">500</span> words
+                </div>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label for="files" data-i18n="contact.fileslabel">Attachments</label>
+                <input id="files" name="files" class="input" type="file"
+                       multiple accept="image/*,video/*,.pdf,.zip,.txt,.log">
+                <small data-i18n="contact.filestip">Optional. You can attach screenshots, video or logs.</small>
+              </div>
+            </div>
+
+            <div class="section-nav" style="position:static; margin-top:10px; justify-content:center;">
+              <button id="contactSubmit" type="submit" class="btn next-section" data-i18n="contact.submit">Send</button>
+            </div>
+
+            <p class="support-note" data-i18n="contact.supportnote">Support is only available in English.</p>
+          </form>
+        </div>
+      </article>
+
+      <!-- (2) Thank you + Summary block (accordion, stängt från start) -->
+      <article id="thanksItem" class="policy-item faq-item">
+        <button class="policy-toggle faq-toggle" type="button" aria-expanded="false" aria-controls="c2" aria-disabled="true">
+          <span class="policy-title" data-i18n="contact.thankstitle">2) Thanks!</span>
+          <img class="faq-icon" src="./assets/img/smileys/1F496_color.png" alt="" width="28" height="28" decoding="async">
+        </button>
+
+        <div id="c2" class="faq-panel" role="region" hidden>
+          <div class="block" id="contactSummary" style="max-width:680px; margin:12px auto;">
+            <h2 data-i18n="contact.thanksh1">Thanks for your message! 💌</h2>
+            <p data-i18n="contact.thanksbody">We’ve received your message and will get back to you soon.</p>
+
+            <h3 data-i18n="contact.summarytitle">Message Summary</h3>
+            <p><strong data-i18n="contact.summarysubmitted">Submitted:</strong> <time id="summaryTime"></time></p>
+            <dl id="summaryList" class="summary-list"></dl>
+
+            <div class="thank-nav">
+              <a href="./" class="btn-yellow" data-i18n="contact.backhome">Back to Homepage</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+  (function(){
+    const ACC  = document.getElementById('contactAccordion');
+    const formItem   = document.getElementById('contactItem');
+    const thanksItem = document.getElementById('thanksItem');
+    const formPanel  = document.getElementById('c1');
+    const thanksPanel= document.getElementById('c2');
+    const formToggle = formItem.querySelector('.faq-toggle');
+    const thanksToggle= thanksItem.querySelector('.faq-toggle');
+
+    // Gör rubrikerna "passiva" (ingen manuell toggling)
+    [formToggle, thanksToggle].forEach(btn=>{
+      btn.classList.add('toggle-disabled');
+      btn.setAttribute('aria-disabled','true');
+    });
+
+    function openForm(scroll=false){
+      formItem.classList.add('is-open');
+      formToggle.setAttribute('aria-expanded','true');
+      formPanel.hidden = false;
+      thanksItem.classList.remove('is-open');
+      thanksToggle.setAttribute('aria-expanded','false');
+      thanksPanel.hidden = true;
+      if(scroll) formItem.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    function openThanks(){
+      formItem.classList.remove('is-open');
+      formToggle.setAttribute('aria-expanded','false');
+      formPanel.hidden = true;
+      thanksItem.classList.add('is-open');
+      thanksToggle.setAttribute('aria-expanded','true');
+      thanksPanel.hidden = false;
+      thanksItem.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    // === Scroll till toppen vid sidladdning ===
+    window.addEventListener('load', () => {
+      window.scrollTo(0,0);
+      openForm(false); // öppna formuläret utan att auto-scrolla
+    });
+
+    // ===== Helpers =====
+    const q  = (s,r=document)=>r.querySelector(s);
+    const qa = (s,r=document)=>Array.from(r.querySelectorAll(s));
+    const setErr = (el,on)=>{ if(!el) return; el.classList.toggle('input--error', !!on); el.setAttribute('aria-invalid', on?'true':'false'); const lab = el.id && document.querySelector('label[for="'+el.id+'"]'); lab && lab.classList.toggle('label--error', !!on); };
+
+    // === Character limit (min 40, max 500) ===
+    const msg = q('#message');
+    const wcWrap = q('.word-counter');   // vi skriver egen text här, ignorerar ev. gamla spans
+    const limit = 500;
+    const minChars = 40;
+
+    let msgTouched = false;
+    let attemptedSubmit = false;
+
+    function countChars(text){ return text.trim().length; }
+
+    function updateCounter(){
+      const n = countChars(msg.value);
+      const shouldShowError = (attemptedSubmit || msgTouched);
+
+      if(n < minChars){
+        // Visa "Please write at least 40 characters. (n/40)"
+        if (wcWrap) wcWrap.textContent = `Please write at least ${minChars} characters. (${n}/${minChars})`;
+        setErr(msg, shouldShowError && n < minChars);
+      }else{
+        // Visa "(n/500)" efter att min-gränsen passerats
+        if (wcWrap) wcWrap.textContent = `(${n}/${limit})`;
+        setErr(msg, shouldShowError && n > limit);
+      }
+    }
+
+    msg.addEventListener('input', ()=>{ msgTouched = true; updateCounter(); });
+    msg.addEventListener('blur',  ()=>{ msgTouched = true; updateCounter(); });
+    updateCounter();
+
+    // Email live-match
+    const email = q('#email'), email2 = q('#emailConfirm'), mismatch = q('#emailMismatch');
+    const checkEmailPair = ()=>{
+      const a = (email.value||'').trim(), b = (email2.value||'').trim();
+      const ok = a.length>0 && b.length>0 && a.toLowerCase()===b.toLowerCase();
+      const showErr = a && b && !ok;
+      mismatch.hidden = !showErr;
+      setErr(email, !a); setErr(email2, !b || showErr);
+      return ok;
+    };
+    ['input','blur'].forEach(ev=>{
+      email.addEventListener(ev, checkEmailPair);
+      email2.addEventListener(ev, checkEmailPair);
+    });
+
+    // Validate required fields (inkl. min/max tecken)
+    function validate(){
+      attemptedSubmit = true;
+      const reqIds = ['email','emailConfirm','firstName','subject','message'];
+      let firstBad=null;
+      reqIds.forEach(id=>{
+        const el = q('#'+id);
+        const bad = !el.value || !el.value.trim();
+        setErr(el, bad);
+        if(bad && !firstBad) firstBad=el;
+      });
+
+      const chars = countChars(msg.value);
+      if (chars < minChars || chars > limit){ setErr(msg,true); if(!firstBad) firstBad=msg; }
+
+      if(!checkEmailPair()){ if(!firstBad) firstBad=email2; }
+      if(firstBad){ firstBad.focus(); }
+      return !firstBad;
+    }
+
+    function filesList(fileList){
+      if(!fileList || !fileList.length) return [];
+      return Array.from(fileList).map(f=>({name:f.name,type:f.type||'file',size:f.size}));
+    }
+
+    const form = q('#contactForm');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if(!validate()) return;
+
+      const payload = {
+        email: email.value.trim(),
+        firstName: q('#firstName').value.trim(),
+        lastName:  q('#lastName').value.trim(),
+        subject:   q('#subject').value.trim(),
+        phone:     q('#phone').value.trim(),
+        message:   q('#message').value.trim(),
+        attachments: filesList(q('#files').files),
+        timestamp: new Date().toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+      };
+
+      const ENDPOINT = null;
+      if(ENDPOINT){
+        try{
+          const res = await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+          if(!res.ok) throw new Error('Bad response');
+        }catch(err){
+          alert('Could not send to server. Check console for data.');
+        }
+      }
+      console.log('[Contact] payload →', payload);
+
+      const tLocal = new Date(payload.timestamp).toLocaleString('sv-SE',{
+        year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'
+      });
+      q('#summaryTime').textContent = tLocal;
+
+      const rows = [
+        {k:'Email', v: payload.email},
+        {k:'First name', v: payload.firstName},
+        {k:'Last name', v: payload.lastName},
+        {k:'Phone', v: payload.phone},
+        {k:'Subject', v: payload.subject},
+        {k:'Message', v: payload.message},
+        {k:'Attachments', v: payload.attachments.length ? payload.attachments.map(a=>`${a.name} (${a.type})`).join('\n') : ''},
+      ];
+      const list = q('#summaryList'); list.innerHTML = '';
+      rows.forEach(r=>{
+        if(r.v && String(r.v).trim()){
+          const dt=document.createElement('dt');
+          dt.setAttribute('data-i18n','contact.summary.'+r.k.replace(/\s+/g,'').toLowerCase());
+          dt.textContent = (window.i18n?.t?.('contact.summary.'+r.k.replace(/\s+/g,'').toLowerCase())||r.k);
+          const dd=document.createElement('dd'); dd.textContent=r.v;
+          list.append(dt,dd);
+        }
+      });
+
+      form.reset();
+      updateCounter(); mismatch.hidden = true;
+      openThanks();
+    });
+  })();
+  </script>
+</body>
+</html>

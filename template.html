@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="site.title">GooseHunt Game – Official Page</title>
+  <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/img/favicon/favicon_favicon_goosehunt_large.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon_goosehunt_small.png">
+  <link rel="icon" type="image/x-icon" href="./assets/img/favicon/favicon.ico">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...et=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+
+  <!-- LANGUAGE / Shared JS -->
+  <script src="./js/base-path.js" defer></script>
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script> 
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css" />
+  <link rel="stylesheet" href="./assets/css/consent.css" />
+
+  <!-- Consent -->
+  <script src="./js/consent.js" defer></script>
+
+  <!-- Extra favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon.png">
+
+  <!-- Turbo (om du använder det) -->
+  <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
+</head>
+
+<body>
+  <!-- 🔁 Shared header (laddas av include.js) -->
+  <div id="header"></div>
+
+  <script>
+    window.addEventListener("load", function() {
+      const main = document.querySelector("main");
+      main.style.minHeight = "100vh";
+      main.style.display = "flex";
+      main.style.alignItems = "center";      // vertikalt
+      main.style.justifyContent = "center";  // horisontellt
+    });
+  </script>
+
+  <!-- CONTENT START -->
+  <main>
+    <!-- CONTENT GOES HERE -->
+  </main>
+  <!-- CONTENT END -->
+
+  <!-- 🔁 Shared footer (laddas av include.js) -->
+  <div id="footer"></div>
+
+  <!-- Dina övriga scripts -->
+  <script src="./js/nav.js" defer></script>
+  <script src="./js/i18n.js" defer></script>
+  <script src="./js/theme-color.js" defer></script>
+</body>
+</html>

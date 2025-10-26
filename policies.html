@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="site.title">GooseHunt Game – Official Page</title>
+  <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
+
+  <script>
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e) {}
+    window.scrollTo(0, 0);
+  </script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/img/favicon/favicon_favicon_goosehunt_large.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon_goosehunt_small.png">
+  <link rel="icon" type="image/x-icon" href="./assets/img/favicon/favicon.ico">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...et=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+
+  <!-- LANGUAGE / Shared JS -->
+  <script src="./js/base-path.js" defer></script>
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script> 
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css">
+  <link rel="stylesheet" href="./assets/css/consent.css">
+
+  <!-- Consent -->
+  <script src="./js/consent.js" defer></script>
+
+  <!-- Extra favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon.png">
+
+  <!-- Turbo (om du använder den) -->
+  <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
+</head>
+
+<body>
+  <!-- 🔁 Shared header -->
+  <div id="header"></div>
+
+  <!-- CONTENT START -->
+  <main>
+    <!-- Intro -->
+    <section class="policy-intro">
+      <div class="block block--intro">
+        <h1 class="policy-intro__title" data-i18n="policies.title">POLICIES & LEGAL INFORMATION</h1>
+        <p class="policy-intro__desc" data-i18n="policies.subtitle">Here you’ll find details about our Privacy Policy, Cookie usage, and Terms & Conditions.</p>
+      </div>
+    </section>
+
+    <section class="policy-accordion" id="policies" aria-label="Policies">
+      <!-- TERMS -->
+      <article class="policy-item">
+        <button id="p1-btn" class="policy-toggle" aria-expanded="false" aria-controls="p1">
+          <span class="policy-title" data-i18n="policies.termstitle">TERMS & CONDITIONS</span>
+          <span class="policy-chev" aria-hidden="true">▾</span>
+        </button>
+
+        <div id="p1" class="policy-panel" role="region" aria-labelledby="p1-btn" hidden>
+          <div class="block__panel block__panel--light">
+            <p class="policy-subtext" data-i18n="policies.availsubtitle">Only Available in English</p>
+            <div class="block__panel-body" data-src="./assets/txt/termsandconditions.txt">
+              Loading Contents...
+            </div>
+            <div class="scroll-fade" aria-hidden="true"></div>
+          </div>
+          <p class="policy-subtext policy-subtext--bottom">Last updated 06/10/2025</p>
+        </div>
+      </article>
+
+      <!-- COOKIES -->
+      <article class="policy-item">
+        <button id="p2-btn" class="policy-toggle" aria-expanded="false" aria-controls="p2">
+          <span class="policy-title" data-i18n="policies.cookietitle">COOKIE POLICY</span>
+          <span class="policy-chev" aria-hidden="true">▾</span>
+        </button>
+
+        <div id="p2" class="policy-panel" role="region" aria-labelledby="p2-btn" hidden>
+          <div class="block__panel block__panel--light">
+            <p class="policy-subtext" data-i18n="policies.availsubtitle">Only Available in English</p>
+            <div class="block__panel-body" data-src="./assets/txt/cookiespolicy.txt">
+              Loading Contents...
+            </div>
+            <div class="scroll-fade" aria-hidden="true"></div>
+          </div>
+          <p class="policy-subtext policy-subtext--bottom">Last updated 06/10/2025</p>
+        </div>
+      </article>
+
+      <!-- PRIVACY -->
+      <article class="policy-item">
+        <button id="p3-btn" class="policy-toggle" aria-expanded="false" aria-controls="p3">
+          <span class="policy-title" data-i18n="policies.privacytitle">PRIVACY POLICY</span>
+          <span class="policy-chev" aria-hidden="true">▾</span>
+        </button>
+
+        <div id="p3" class="policy-panel" role="region" aria-labelledby="p3-btn" hidden>
+          <div class="block__panel block__panel--light">
+            <p class="policy-subtext" data-i18n="policies.availsubtitle">Only Available in English</p>
+            <div class="block__panel-body" data-src="./assets/txt/privacypolicy.txt">
+              Loading Contents...
+            </div>
+            <div class="scroll-fade" aria-hidden="true"></div>
+          </div>
+          <p class="policy-subtext policy-subtext--bottom">Last updated 06/10/2025</p>
+        </div>
+      </article>
+    </section>
+
+    <script>
+      // ===== Accordion + lazy-load =====
+      (function () {
+        const ACCORDION = document.getElementById('policies');
+        const HEADER_H = parseInt(getComputedStyle(document.documentElement)
+                            .getPropertyValue('--header-h-shrunk')) || 72;
+
+        // Ladda in txt-innehåll för varje panel (en gång)
+        ACCORDION.querySelectorAll('.block__panel-body[data-src]').forEach(el => {
+          const url = el.getAttribute('data-src');
+          fetch(url)
+            .then(r => { if (!r.ok) throw new Error('Could not load contents ' + url); return r.text(); })
+            .then(t => { el.textContent = t; })
+            .catch(e => { el.textContent = 'ERROR: ' + e.message; });
+        });
+
+        function sizePanel(panel) {
+          if (!panel) return;
+          const viewportH = window.innerHeight;
+          const maxH = Math.max(160, viewportH - (HEADER_H + 16 + 56));
+          const scroller = panel.querySelector('.block__panel-body');
+          if (scroller) scroller.style.maxHeight = maxH + 'px';
+        }
+
+        function openItem(item) {
+          const btn = item.querySelector('.policy-toggle');
+          const panel = item.querySelector('.policy-panel');
+
+          ACCORDION.querySelectorAll('.policy-item.is-open').forEach(it => {
+            if (it !== item) {
+              const otherBtn = it.querySelector('.policy-toggle');
+              const otherPanel = it.querySelector('.policy-panel');
+              it.classList.remove('is-open');
+              otherBtn.setAttribute('aria-expanded', 'false');
+              otherPanel.hidden = true;
+            }
+          });
+
+          item.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+          panel.hidden = false;
+          sizePanel(panel);
+
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        }
+
+        function closeItem(item) {
+          const btn = item.querySelector('.policy-toggle');
+          const panel = item.querySelector('.policy-panel');
+          item.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          panel.hidden = true;
+        }
+
+        ACCORDION.addEventListener('click', (e) => {
+          const btn = e.target.closest('.policy-toggle');
+          if (!btn) return;
+          const item = btn.closest('.policy-item');
+          if (!item) return;
+          if (item.classList.contains('is-open')) closeItem(item);
+          else openItem(item);
+        });
+
+        window.addEventListener('resize', () => {
+          const openPanel = ACCORDION.querySelector('.policy-item.is-open .policy-panel');
+          if (openPanel) sizePanel(openPanel);
+        });
+
+        const firstOpen = ACCORDION.querySelector('.policy-item.is-open .policy-panel');
+        if (firstOpen) sizePanel(firstOpen);
+      })();
+    </script>
+  </main>
+  <!-- CONTENT END -->
+
+  <!-- 🔁 Shared footer -->
+  <div id="footer"></div>
+
+  <!-- Dina övriga scripts -->
+  <script src="./js/nav.js" defer></script>
+  <script src="./js/theme-color.js" defer></script>
+</body>
+</html>

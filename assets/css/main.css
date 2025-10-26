@@ -1,0 +1,1773 @@
+/* ====== Bas ====== */
+body {
+  margin: 0;
+
+  /* Lager: 1) transparent PNG, 2) bakgrundsfärg */
+  background:
+    url("../img/clouds-background.png") repeat-y center top, /* transparent PNG */
+    #2f82ef; /* fallback färg */
+
+  background-size: auto, auto;
+  background-attachment: scroll;
+
+  font-family: 'Poppins', sans-serif;
+  color: #1a0812;
+  text-align: center;
+}
+
+
+/* === Header (sticky + shrink) === */
+.header {
+  /* höjder definierade som variabler */
+  --header-h: 112px;
+  --header-h-shrunk: 72px;
+
+  position: sticky;     /* sitter kvar vid scroll */
+  top: 0;
+  inset-block-start: 0; /* extra säkerhet för vissa webkit-varianter */
+  z-index: 1000;
+
+  background: #fff;
+  box-shadow: 0 6px 0 #D1D8FF, 0 15px 0 #0000004d;
+
+  height: var(--header-h);
+  padding-top: env(safe-area-inset-top); /* iOS notch */
+
+  transition: height .25s ease, padding .25s ease;
+}
+
+/* Shrink vid scroll */
+.header.is-shrunk {
+  height: var(--header-h-shrunk);
+}
+
+/* Dölj skuggan om menyn är öppen */
+.header.menu-open {
+  box-shadow: none !important;
+}
+
+/* Loggan kan krympa snyggt */
+.header .logo img {
+  max-height: 64px;
+  transition: max-height .25s ease;
+}
+.header.is-shrunk .logo img {
+  max-height: 48px;
+}
+
+/* ✅ Grid löser “loggan exakt i mitten” */
+.header .header-inner{
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  padding-inline: 16px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* vänster | LOGO | höger */
+  align-items: center;
+  column-gap: 1rem;
+  position: relative; /* för .menu-toggle */
+}
+
+.menu-toggle {
+  position: absolute;    /* ✅ påverkar inte grid */
+  top: 50%;
+  left: 14px;            /* eller var du vill ha knappen */
+  transform: translateY(-50%);
+  display: none;         /* styrs av media query */
+  width: 40px; height: 40px;
+  background: transparent; border: 0; cursor: pointer;
+  padding: 0; margin: 0;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 6px;
+}
+
+
+/* Placering */
+.nav-left  { grid-column: 1; justify-self: end; }
+.logo-wrap { grid-column: 2; justify-self: center; line-height: 0; }
+.nav-right { grid-column: 3; justify-self: start; }
+
+/* Nav-listor */
+.nav ul{
+  display:flex;
+  align-items:center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.nav a{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+  font-weight:600;
+  color:#222;
+  line-height:1;
+  padding: 0.25rem 0;
+}
+.nav a:hover,
+.nav a:focus-visible { color: #FFDD17; }
+
+/* Logga – styr höjden och krympning */
+.logo{
+  display:block;
+  height: calc(var(--header-h) - 28px);
+  width:auto;
+  transition: height .2s ease;
+}
+.header.is-shrunk .logo{ height: calc(var(--header-h-shrunk) - 16px); }
+
+/* Små skärmar: minska gap lite */
+@media (max-width: 720px) {
+  .nav ul { gap: 0.9rem; }
+}
+
+/* MENUTOGGLE: exakt vertikalt centrerad */
+.menu-toggle{
+  position: absolute;
+  top: 50%;
+  left: var(--menu-toggle-offset-left);
+  transform: translateY(-50%);
+  display: none;                 /* dold som standard */
+  width: 40px; height: 40px;
+  background: transparent; border: 0; cursor: pointer;
+  padding: 0; margin: 0;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 6px;
+}
+.menu-toggle span{
+  display:block; width:26px; height:3px; border-radius:2px; background:#1a0812;
+}
+
+/* Compact-läge: visas bara när JS sätter body.nav-compact */
+body.nav-compact .menu-toggle { display: inline-flex; }
+body.nav-compact .nav-left,
+body.nav-compact .nav-right { display: none; }
+
+/* Default: visa länkar, dölj hamburgare */
+.menu-toggle{ display: none; }
+.nav-left, .nav-right { display: block; }
+
+/* Visa knappen på små skärmar (och göm länkar) */
+@media (max-width: 900px){
+  .menu-toggle{ display:inline-flex; }
+  .nav-left, .nav-right{ display:none; }
+}
+
+
+
+
+
+/* ======= MOBILMENY PANEL (enkel baseline) ======= */
+.menu-panel {
+  position: fixed;
+  top: var(--header-h-shrunk);   /* läggs direkt under shrinkad header */
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  box-shadow:
+    0 6px 0 #D1D8FF,
+    0 15px 0 #0000004d;
+  z-index: 999;
+  padding: 12px 16px;
+}
+.header:not(.is-shrunk) + .menu-panel { top: var(--header-h); } /* om man öppnar innan shrink */
+
+.menu-panel-nav ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.menu-panel-nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #222;
+  padding: 10px 4px;
+}
+.menu-panel-nav a:hover,
+.menu-panel-nav a:focus-visible { color: #FFDD17; }
+
+/* ====== Block ====== */
+.block {
+  margin: 30px auto;
+  padding: 40px 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  color: #1a0812;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+}
+
+/* === Fasta bakgrunder på alla block (inga bilder) === */
+.block,
+.block-small,
+.block-medium,
+.block-large,
+.block.square {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow:
+    0 6px 0px #D1D8FF,   /* liten nära skugga */
+    0 15px 0px #0000004d;/* större mörkare skugga */
+}
+
+/* Lite tajtare på riktigt stora skärmar */
+@media (min-width: 1200px) {
+  .block { width: 70%; }
+}
+
+/* ===== Policies – Single-open accordion ===== */
+.policy-accordion{
+  width: min(920px, 92vw);
+  margin: 30px auto;
+  display: grid;
+  gap: 14px;
+}
+
+/* Varje item är ett eget kort (matchar dina .block) */
+.policy-item{
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 0px #D1D8FF, 0 15px 0px #0000004d;
+  overflow: hidden; /* så att panelen klipps snyggt */
+}
+
+/* Rubrikraden (knappen) */
+.policy-toggle{
+  width: 100%;
+  background: #ffffff;
+  border: 0;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #1a0812;
+}
+.policy-toggle:hover,
+.policy-toggle:focus-visible{
+  background: #FFDD17; /* subtil accent */
+  color:#fff
+}
+
+.policy-chev{
+  font-size: 1.1rem;
+  transition: transform .18s ease;
+}
+.policy-item.is-open .policy-chev{ transform: rotate(180deg); }
+
+/* Panelen följer din .block__panel look, men vi pejlar höjden via JS */
+.policy-panel{
+  padding: 0 12px 12px 12px; /* lite luft runt block__panel */
+}
+
+/* Scroller: limit inom viewport. JS sätter max-height dynamiskt */
+.policy-panel .block__panel-body{
+  overflow: auto; /* din stil har detta redan; säkerhetsbälte */
+  position: relative;
+}
+
+/* Diskret "scroll hint" nertill */
+.scroll-fade{
+  position: sticky;
+  bottom: 0;
+  height: 22px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.9));
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Liten spacing så nästa rubrik kan “peek:a” även när första är öppen */
+.policy-accordion{ padding-bottom: 8px; }
+
+.policy-subtext {
+  margin: 6px 0 10px 4px;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  text-align: left;
+}
+/* === Policy Intro Block – matcha accordionbredd === */
+.policy-intro{
+  width: min(920px, 92vw);
+  margin: 20px auto 12px;
+}
+
+.block--intro{
+  /* överskriv .block */
+  max-width: 100% !important;   /* <— tar hela containern */
+  width: 100%;
+  box-sizing: border-box;
+
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 0 #D1D8FF, 0 15px 0 #0000004d; /* samma som .policy-item */
+  padding: 22px 20px 26px;  /* kompakt höjd */
+  text-align: center;
+}
+
+.policy-intro__title{
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1a0812;
+}
+
+.policy-intro__desc{
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.45;
+}
+
+@media (max-width: 600px){
+  .block--intro{ padding: 18px 14px 22px; }
+  .policy-intro__title{ font-size: 1.15rem; }
+  .policy-intro__desc{ font-size: .9rem; }
+}
+
+
+/* Tightare på små skärmar */
+@media (max-width: 600px){
+  .policy-toggle{ padding: 12px 12px; font-size: 1rem; }
+  .policy-panel{ padding: 0 10px 10px 10px; }
+}
+
+
+/* FAQ: behåll samma kort/knapp-stil som policies, men lägg in liten bild till höger
+   och ta bort panelbakgrund/scroll så texten "håller" blockets höjd. */
+
+/* === FAQ KONTAINER === */
+.faq-item {
+  position: relative;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  overflow: hidden; /* håller sömmen snygg i hörn */
+  transition: all 0.3s ease;
+}
+
+/* === SÖMRAM === */
+.faq-item::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border-radius: 14px;
+  border: 2px dashed rgba(110, 120, 255, 0.25);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Aktiv (öppen) */
+.faq-item.is-open::before {
+  border-color:  rgba(110, 120, 255, 0.25);
+}
+
+/* Hover på hela blocket (sömmen) */
+.faq-item:hover::before {
+  border-color: rgba(90, 100, 255, 0.65);
+}
+
+/* === FAQ-KNAPP === */
+.faq-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 18px 22px;
+  border: none;
+  background: transparent;
+  border-radius: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+  color: #181818; /* grundfärg */
+}
+
+/* Hover: ingen bakgrund, bara färgändring + lätt skalning */
+.faq-toggle:hover {
+  transform: scale(1.01);
+  background: transparent;
+  color: #181818; /* samma som sömmen vid hover */
+}
+
+/* När blocket är öppet: återgå till svart text */
+.faq-item.is-open .faq-toggle {
+  background: transparent;
+  color: #181818;
+}
+
+/* Ikon till höger */
+.faq-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
+
+/* === PANELEN === */
+.faq-panel {
+  padding: 0 16px 16px 16px;
+}
+
+.faq-panel p {
+  margin: 10px 0 0 0;
+  line-height: 1.5;
+  color: #1a0812;
+  text-align: left;
+}
+.faq-panel p a {
+  color: #4a3fd0;                 /* valfri länkfärg */
+  text-decoration: underline;     /* behåll understrykning */
+  font-weight: 600;
+}
+
+.faq-panel p a:hover {
+  color: #6a5cff;                 /* matcha söm-hoverfärg */
+  text-decoration: none;          /* snyggt vid hover */
+}
+.faq-link {
+  color: #111; /* vanlig textfärg */
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dashed var(--seam-color, #4d6aff);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Hovereffekt */
+.faq-link:hover {
+  color: var(--hover-color, #4d6aff); /* samma blå som din sömrad */
+  border-bottom-color: var(--hover-color, #4d6aff);
+}
+
+/* Dölj ev. oönskade policy-element */
+.faq-item .block__panel,
+.faq-item .block__panel-body,
+.faq-item .scroll-fade {
+  display: none !important;
+}
+
+/* ===== Stretch-variant av block utan text-panel ===== */
+.block--stretch-free {
+  margin: 20px auto;
+  padding: 40px 20px;
+  max-width: 400px;    /* samma som .block, ändra om du vill bredare */
+  width: 100%;
+  box-sizing: border-box;
+  
+
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow:
+    0 6px 0px #D1D8FF,
+    0 15px 0px #0000004d;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  /* sträcker sig i höjd men håller min och max */
+  min-height: max(200px, calc(100vh - 100px));
+  max-height: 900 px;
+
+  /* centrera innehållet om du vill */
+  align-items: center;
+  justify-content: center;
+}
+
+.block--stretch-free {
+  min-height: 600px;
+  max-height: 900px;
+}
+
+/* ===== Block som sträcker sig från 50px topp till 50px botten ===== */
+.block--stretch {
+  /* baserar sig på .block du redan har */
+  min-height: calc(100vh - 100px); /* 50px top + 50px bottom luft */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 400px;
+  max-height: 600px; 
+}
+
+/* Header-linje inne i blocket */
+.block__header {
+  margin: 0;
+  padding: 0 4px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  text-align: left; /* ändra till center om du vill */
+}
+
+/* Inre panel med egen färg (tar resterande höjd i blocket) */
+.block__panel {
+  --panel-bg: #f7f6ff;     /* byt färg här */
+  --panel-border: #d1d8ff; /* kantfärg */
+  --panel-radius: 12px;
+
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  flex: 1 1 auto;  /* fyll ut höjd */
+  min-height: 0;   /* viktigt för att child med overflow ska kunna scrolla */
+  text-align: left;
+}
+
+/* Själva visningsytan inne i panelen (med scroll) */
+.block__panel-body {
+  flex: 1 1 auto;
+  min-height: 0;         /* krävs för korrekt overflow i flex-kolumn */
+  overflow: auto;        /* scroll här */
+  padding: 12px;
+  border-radius: 8px;
+
+  background: #ffffffb8; /* lätt vit bakgrund för läsbarhet (valfritt) */
+  border: 1px dashed #e2e6ff;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;  /* bevarar radbrytningar om du fyller med text */
+  word-break: break-word;
+}
+
+/* (Valfritt) lite snyggare scrollbar där det stöds */
+.block__panel-body::-webkit-scrollbar { width: 10px; }
+.block__panel-body::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(0,0,0,.2);
+}
+
+/* Tema-varianter (valfritt) */
+.block__panel--light   { --panel-bg: #fafbff; --panel-border: #e1e6ff; }
+.block__panel--neutral { --panel-bg: #f5f5f5; --panel-border: #e3e3e3; }
+.block__panel--dark    { --panel-bg: #edf0ff; --panel-border: #c5cdfc; }
+
+/* Kompakt/rymlig padding (valfritt) */
+.block__panel--tight { padding: 8px; }
+.block__panel--loose { padding: 16px; }
+
+/* Gör .block--title lika bred som texten (plus padding) */
+.block.block--title{
+  display: block !important;
+  width: max-content !important;   /* bredd = innehåll */
+  max-width: 100% !important;      /* klipp inte på små skärmar */
+  white-space: nowrap;             /* håll på en rad så bredden växer */
+  padding: 2px 60px !important;    /* ↑↓ höjd, ←→ extra bredd runt text */
+  margin: 20px auto 8px !important;/* centrera horisontellt */
+  /* resten av din stil: */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 0 #D1D8FF, 0 20px 0 #00000033;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* === Bild-placeholder === */
+.img-placeholder {
+  width: 100%;
+  max-width: 400px;   /* samma maxbredd som .block */
+  aspect-ratio: 16 / 9; /* gör den responsiv, byt till 1/1 om du vill ha kvadrat */
+  background: #f0f0f0;  /* ljusgrå bakgrund så man ser att det är en placeholder */
+  border-radius: 12px;  /* samma avrundning som blocken */
+  box-shadow:
+    0 6px 0px #D1D8FF,
+    0 15px 0px #0000004d;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.block .img-placeholder-inner {
+  width: 90%;
+  aspect-ratio: 1 / 1;
+  background: #f5f5f5;
+  border-radius: 12px;
+  margin: 0 auto;
+
+  overflow: hidden;         /* ✅ beskär allt som sticker ut */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #aaa;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+
+  box-shadow: none !important;
+}
+
+.block .img-placeholder-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;         /* ✅ fyll rutan, beskär istället för stretch */
+  object-position: center;   /* ✅ centrera beskärningen */
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+/* === MAIN GALLERY BLOCK === */
+.gallery-main{
+  width: 90%;
+  aspect-ratio: 1 / 1;
+  background: #f5f5f5;
+  border-radius: 12px;
+  margin: 0 auto 12px;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: none !important;
+
+  /* swipe */
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-track{ display:flex; width:100%; height:100%; }
+.gallery-track img{
+  width:100%; height:100%;
+  object-fit: cover;        /* fyller rutan utan stretch, beskär vid behov */
+  object-position:center;
+  flex-shrink:0; scroll-snap-align:center;
+  border-radius:12px; box-shadow:none !important;
+}
+
+/* Thumbs under – små och konsekventa */
+.gallery-thumbs{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.gallery-thumbs img{
+  width:56px; height:56px; object-fit:cover; border-radius:6px; cursor:pointer;
+  opacity:.85; transition:opacity .2s, transform .2s;
+}
+.gallery-thumbs img:hover{ opacity:1; transform:scale(1.05); }
+/* Byt ut din gamla .gallery-thumbs img.is-active {...} */
+.gallery-thumbs img.is-active{
+  outline: none;                 /* säkerhetsbälte */
+  box-shadow: 0 0 0 3px #f0c040; /* tydlig gul ram */
+  border-radius: 6px;            /* följ formen */
+}
+
+.gallery-main {
+  scrollbar-width: thin;             /* Firefox */
+  scrollbar-color: #f0c040 #e0e0e0;  /* färg på tumme + spår */
+}
+
+/* Chrome, Edge, Safari */
+.gallery-main::-webkit-scrollbar {
+  height: 8px;              /* höjd på horisontell scrollbar */
+}
+
+.gallery-main::-webkit-scrollbar-track {
+  background: #FFDD17;      /* spåret (bakgrunden) */
+  border-radius: 4px;
+}
+
+.gallery-main::-webkit-scrollbar-thumb {
+  background-color: #FFB213; /* själva “tummen” */
+  border-radius: 4px;
+  border: 2px solid #FFB213; /* lite spacing */
+}
+
+.gallery-main::-webkit-scrollbar-thumb:hover {
+  background-color: #FFB213; /* ljusare vid hover */
+}
+
+/* ===== Cookie & Consent – Styles ===== */
+:root{
+  --c-bg:#0f172a;
+  --c-fg:#e2e8f0;
+  --c-accent:#3b82f6;
+  --c-muted:#94a3b8;
+  --c-card:#111827;
+  --c-radius:16px;
+  --c-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.consent-hidden{display:none!important}
+
+/* Banner */
+.consent-banner{
+  position:fixed; left:0; right:0; bottom:0; z-index:9999;
+  display:flex; justify-content:center; padding:16px;
+}
+.consent-banner__card{
+  max-width:900px; width:min(900px,92vw);
+  background:var(--c-bg); color:var(--c-fg);
+  border-radius:var(--c-radius); box-shadow:var(--c-shadow);
+  padding:16px 18px; display:grid; gap:12px;
+  grid-template-columns: 1fr auto;
+}
+.consent-banner__text{font-size:14px; line-height:1.5}
+.consent-banner__text small{color:var(--c-muted); display:block; margin-top:6px}
+.consent-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.consent-btn{
+  border:0; padding:10px 14px; border-radius:12px; cursor:pointer;
+  font-weight:700; font-size:14px;
+}
+.consent-btn--primary{background:var(--c-accent); color:white}
+.consent-btn--ghost{background:transparent; color:var(--c-fg); outline:1px solid #334155}
+.consent-link{color:var(--c-accent); text-decoration:underline; font-weight:600; cursor:pointer}
+
+/* Modal */
+.consent-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.55);
+  display:flex; align-items:center; justify-content:center;
+  z-index:10000; padding:16px;
+}
+.consent-modal{
+  background:var(--c-card); color:var(--c-fg);
+  border-radius:var(--c-radius); box-shadow:var(--c-shadow);
+  width:min(780px, 92vw); max-height:90vh; overflow:auto;
+}
+.consent-modal header{
+  padding:18px 20px; border-bottom:1px solid #1f2937;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.consent-modal h2{margin:0; font-size:18px}
+.consent-close{
+  background:transparent; border:0; color:var(--c-muted); font-size:22px; cursor:pointer;
+}
+.consent-body{padding:12px 20px 4px}
+.consent-section{
+  background:#0b1220; border:1px solid #1f2937; border-radius:12px;
+  padding:14px; margin:10px 0; display:grid; gap:8px;
+}
+.consent-row{display:flex; justify-content:space-between; align-items:center; gap:12px}
+.consent-col{display:grid; gap:6px}
+.consent-title{font-weight:700}
+.consent-desc{color:var(--c-muted); font-size:13px}
+.switch{ --h:28px; position:relative; width:50px; height:var(--h); }
+.switch input{display:none}
+.slider{ position:absolute; inset:0; background:#334155; border-radius:999px; transition:.2s; }
+.slider:before{
+  content:""; position:absolute; height:22px; width:22px; left:3px; top:3px;
+  background:white; border-radius:50%; transition:.2s;
+}
+.switch input:checked + .slider{background:var(--c-accent)}
+.switch input:checked + .slider:before{transform:translateX(22px)}
+.switch input:disabled + .slider{opacity:.5; cursor:not-allowed}
+
+.consent-footer{
+  padding:16px 20px 20px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
+  border-top:1px solid #1f2937;
+}
+
+#bugForm .faq-panel { 
+  position: relative; 
+  padding-bottom: 70px; 
+}
+
+/* --- Summary layout: label + value on same line, left-aligned --- */
+
+#summary .summary-list {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+  column-gap: 0px;
+  row-gap: 10px;
+  margin: 8px 0 20px;
+  text-align: left; /* gör all text vänsterjusterad */
+}
+
+#summary .summary-list dt {
+  font-weight: 700;
+  margin: 0;
+  text-align: left; /* vänster istället för höger */
+}
+
+#summary .summary-list dt::after {
+  content: ":"; 
+  margin-right: 6px;
+}
+
+#summary .summary-list dd {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* --- Buttons still centered and same size --- */
+#summary .thank-nav {
+  display: flex;
+  justify-content: center; /* centrera knapparna horisontellt */
+  align-items: center;
+  gap: 14px;
+}
+
+#summary .thank-nav .btn,
+#summary .thank-nav .btn-yellow {
+  min-width: 220px;
+  padding: 12px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+/* Felstatus */
+.input--error {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 0 2px rgba(229,57,53,0.15);
+}
+
+/* Gäller även selects och textareas */
+.select.input--error,
+.textarea.input--error {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 0 2px rgba(229,57,53,0.15);
+}
+
+.label--error {
+  color: #e53935 !important;
+}
+
+/* Mobile */
+@media (max-width:640px){
+  .consent-banner__card{grid-template-columns:1fr; gap:14px}
+  .consent-actions{justify-content:flex-start}
+}
+/* === Centrera & tajta vertikalt "Email" + "Message" på små skärmar === */
+@media (max-width: 640px) {
+  #contactSummary .summary-list {
+    row-gap: 4px; /* tajtare vertikalt mellan alla poster */
+  }
+
+  /* Centrera de utvalda fälten */
+  #contactSummary .summary-list dt[data-i18n="contact.summary.message"],
+  #contactSummary .summary-list dt[data-i18n="contact.summary.message"] + dd,
+  #contactSummary .summary-list dt[data-i18n="contact.summary.email"],
+  #contactSummary .summary-list dt[data-i18n="contact.summary.email"] + dd {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  /* Rubrikerna (Email / Message) */
+  #contactSummary .summary-list dt[data-i18n="contact.summary.message"],
+  #contactSummary .summary-list dt[data-i18n="contact.summary.email"] {
+    font-weight: 700;
+    padding-bottom: 0;      /* ta bort extra spacing */
+    line-height: 1.1;       /* tajtare radavstånd */
+  }
+
+  /* Innehåll (själva texten) */
+  #contactSummary .summary-list dt[data-i18n="contact.summary.message"] + dd,
+  #contactSummary .summary-list dt[data-i18n="contact.summary.email"] + dd {
+    margin-top: -2px;       /* drar upp texten närmare rubriken */
+    margin-bottom: 8px;     /* lite luft mot nästa sektion */
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.35;
+  }
+}
+
+/* Använd som wrapper om du vill visa inställningspanelen direkt på en policiesida */
+/* ===== Inline "Policy Block" – matchar dina .block ===== */
+.block.block--policy{
+  /* baserar sig på befintlig .block-stil i ditt main.css (rundning/skuggor matchar) */
+  max-width: 680px;
+  text-align: left;
+}
+.block.block--policy .policy-title{
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.block.block--policy .policy-desc{
+  margin: 0 0 14px 0;
+  color: #444;
+  line-height: 1.5;
+}
+/* Gör knappraden trevlig i blocket också */
+.block.block--policy .consent-footer{
+  justify-content: flex-end;
+}
+
+/* ===== Bug Form – controls that match your block look ===== */
+.form-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 6px 2px 2px;
+}
+.form-field{ display: grid; gap: 6px; text-align: left; }
+.form-field--full{ grid-column: 1 / -1; }
+.form-field label{ font-weight: 700; font-size: 0.95rem; color: #1a0812; }
+.form-field small{ color:#666; }
+
+.input, .select, .textarea{
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #d1d8ff;            /* matchar dina “panel-border” */
+  background: #fff;
+  padding: 10px 12px;
+  font: inherit;
+  color: #1a0812;
+  outline: none;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.input:focus, .select:focus, .textarea:focus{
+  border-color: #4d6aff;                 /* nära din söm-blå */
+  box-shadow: 0 0 0 3px rgba(77,106,255,.18);
+  background: #fafbff;
+}
+.textarea{ resize: vertical; }
+
+.checkbox{ display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.checkbox input{ width:18px; height:18px; }
+/* === Username mismatch highlighting === */
+.input.error {
+  border-color: #ff4444 !important;
+  box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.25) !important;
+  background-color: #fff6f6 !important;
+}
+#usernameWarning {
+  color: #ff4444;
+  display: none;
+  font-weight: 600;
+}
+.section-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.faq-toggle.toggle-disabled {
+  cursor: default;
+  opacity: 0.9; /* behåll looken, men visuellt “passiv” */
+}
+/* === Next buttons inside bug report sections === */
+/* Ligger fast i botten av panelen */
+/* === Navigationsrad (Back + Next/Submit centrerad) === */
+.section-nav {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;      /* centrera innehållet */
+  align-items: center;
+  gap: 0;                       /* inget mellanrum – vi styr manuellt */
+}
+
+/* === Back-knapp med bild === */
+.back-btn {
+  position: absolute;
+  left: 25px;
+  bottom: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent; /* ingen bakgrund */
+  background-image: url("./assets/img/smileys/E0A7_color.png"); /* din ikon */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%; /* justera storlek */
+  cursor: pointer;
+  transition: transform 0.25s ease;
+  padding: 0;
+}
+
+/* Endast rörelse vid hover/active */
+.back-btn:hover {
+  transform: translateX(-5px);
+}
+
+.back-btn:active {
+  transform: translateY(2px);
+}
+
+/* Inga skuggor, inga färgändringar, ingen outline */
+.back-btn:focus,
+.back-btn:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* Centrera Next/Submit perfekt */
+.section-nav .btn.next-section {
+  background-color: #FFDD17;
+  color: #151515;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+
+  /* Lika mycket "falsk padding" som back-knappen, så knappen hamnar i mitten */
+  margin-left: 42px; /* back-knappens bredd */
+  margin-right: 42px;
+}
+
+.section-nav .btn.next-section:hover {
+  transform: translateY(-2px);
+  background-color: #fcdd2a;
+  color:#ffffff
+}
+.section-nav .btn.next-section:active {
+  transform: translateY(1px);
+}
+/* Röd label vid valideringsfel */
+.form-field label.error {
+  color: #ff4444 !important;
+}
+/* Mobil: 1 kolumn */
+@media (max-width: 720px){
+  .form-grid{ grid-template-columns: 1fr; }
+}
+/* === Gul standardknapp (Back to Homepage) === */
+.btn-yellow {
+  display: inline-block;
+  background-color: #FFDD17;
+  color: #1a0812;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-family: 'Fredoka', sans-serif;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.btn-yellow:hover {
+  color: #fbfbfb;
+  background-color: #FFDD17;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+}
+
+.btn-yellow:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* Centrerad layout i tack-blocket */
+.thank-nav {
+  margin-top: 25px;
+  text-align: center;
+}
+.support-note {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  text-align: right;
+  margin-top: 4px;
+  margin-bottom: 0;
+  width: 100%;
+  display: block;
+}
+/* Centera thank you-meddelandet */
+#contactSummary h2,
+#contactSummary p:first-of-type {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Ta bort den invändiga skuggan på Thank you-blocket */
+#contactSummary {
+  box-shadow: none !important;
+}
+/* Trimma all luft ovanför tackrubriken */
+#thanksItem .faq-panel,
+#thanksItem .block,
+#contactSummary {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+#contactSummary h2 {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+/* Right-align "support is only available..." under knappen */
+.faq-panel .support-note{
+  text-align: right !important;
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #666;
+  padding-right: 6px; /* lite luft från höger, valfritt */
+}
+
+
+/* Standardknapp */
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #FFDD17;
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 12px;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 
+    0 4px 0px #FFB213,
+    0 8px 0px #00000033;
+  border: none;
+}
+.btn:hover {
+  background: #FFDD17;
+  color: #ffffff;
+  box-shadow: 
+    0 6px 0px #FFB213,
+    0 14px 0px #00000033;
+}
+.btn.outline {
+  background: transparent;
+  color: #FFDD17;
+  box-shadow: none;
+}
+.btn.outline:hover {
+  background: #FFDD17;
+  color: #111;
+  box-shadow: 
+    0 6px 0px #D1D8FF,
+    0 12px 0px #0000004d;
+}
+
+.button-row {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center; /* centrerar raderna horisontellt */
+  gap: 12px;               /* mellanrum mellan knapparna */
+}
+
+/* ====== Moln ====== */
+.clouds {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -10;
+}
+.cloud {
+  position: absolute;
+  opacity: 1;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform;
+}
+@keyframes driftSide { from { transform: translateX(0); } to { transform: translateX(20px); } }
+.cloud-left  { left: 0;  animation-name: driftSide; }
+.cloud-right { right: 0; animation-name: driftSide; }
+.cloud-bottom{ bottom: 0; animation-name: driftSide; }
+
+/* ===== Footer: uppåtriktad skugga ===== */
+.footer {
+  background: #ffffff; 
+  box-shadow: 
+    0 -8px 0px #D1D8FF,
+    0 0px 0px #0000004d;
+
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;   /* så vi kan absolut-positionera small */
+  padding: 20px;
+  padding-bottom: 40px; /* extra plats längst ned för årtalet */
+}
+
+/* Footer-länkar på rad */
+.footer {
+  background: #ffffff; 
+  box-shadow: 
+    0 -8px 0px #D1D8FF,
+    0 0px 0px #0000004d;
+
+  min-height: 60px;           /* mindre höjd */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 20px;         /* tunnare padding */
+}
+
+.footer-nav ul {
+  display: flex;
+  flex-wrap: wrap;       /* 👉 tillåter radbrytning */
+  gap: 12px;             /* lite luft mellan länkar */
+  justify-content: center; /* centrerar dem snyggt */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.footer-nav li {
+  flex: 0 0 auto; /* varje länk tar bara så mycket plats den behöver */
+}
+
+
+.footer-nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #222;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+
+.footer-nav a:hover,
+.footer-nav a:focus-visible { color: #FFDD17; }
+
+/* © texten längst ned */
+.footer small {
+  margin-top: auto;           /* tryck ner till botten */
+  font-size: 0.75rem;
+  color: #444;
+}
+
+
+/* === Hamburger → X animation === */
+
+/* Se till att knappen är en positioneringsreferens */
+.menu-toggle{
+  position: absolute;                 /* du har redan absolut + 50% centrerad */
+  top: 50%;
+  left: var(--menu-toggle-offset-left);
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  padding: 0; margin: 0; border: 0;
+  background: transparent;
+  display: none;                      /* din logik styr visning */
+  cursor: pointer;
+}
+
+/* Nollställ ev. tidigare flex-stacking */
+.menu-toggle { align-items: initial; justify-content: initial; gap: 0; }
+
+/* Strecken positioneras exakt över varandra och flyttas i Y-led */
+.menu-toggle span{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 3px;
+  background: #1a0812;
+  border-radius: 2px;
+  transform-origin: center;
+  transition: transform .22s ease, opacity .18s ease;
+}
+
+/* Övre, mitten, undre rad i stängt läge */
+.menu-toggle span:nth-child(1){ transform: translate(-50%, calc(-50% - 7px)); }
+.menu-toggle span:nth-child(2){ transform: translate(-50%, -50%); }
+.menu-toggle span:nth-child(3){ transform: translate(-50%, calc(-50% + 7px)); }
+
+/* ÖPPET läge (aria-expanded="true"): 
+   - Mitten försvinner
+   - Övre & undre roteras till ett "X" i mitten
+*/
+.menu-toggle[aria-expanded="true"] span:nth-child(1){
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0.4);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(3){
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.menu-toggle[aria-expanded="true"] span { background: #FFDD17; }
+/* Respekt för reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .menu-toggle span{ transition: none; }
+}
+/* ✅ Antingen/eller baserat på bredd – INTE scroll */
+@media (max-width: 900px){
+  .menu-toggle{ display: inline-flex; }   /* visa hamburgare */
+  .nav-left, .nav-right{ display: none; } /* dölj länkar */
+}
+
+@media (min-width: 901px){
+  .menu-toggle{ display: none; }          /* dölj hamburgare */
+  .nav-left, .nav-right{ display: block; }/* visa länkar (nav är block; ul:en är flex) */
+}
+
+
+html, body {
+  height: 100%;          /* gör att body fyller hela viewport-höjden */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;               /* tar all tillgänglig höjd mellan header och footer */
+}
+
+.footer {
+  margin-top: auto;      /* trycker ned footern till botten om innehållet är kort */
+}
+li {
+  list-style: none;
+}
+/* ===== EMERGENCY LOCK: Header ska ALLTID synas, och krympa vid scroll ===== */
+:root{
+  --header-h: 112px;
+  --header-h-shrunk: 72px;
+}
+
+/* Tvinga headern att ligga fast överst */
+.header {
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  z-index: 9999 !important;
+  width: 100%;
+  height: var(--header-h);
+  background: #fff;
+  box-shadow: 0 6px 0 #D1D8FF, 0 15px 0 #0000004d;
+  transition: height .25s ease;
+}
+
+/* Krymp vid scroll */
+.header.is-shrunk {
+  height: var(--header-h-shrunk);
+}
+
+/* Se till att loggan krymper snyggt */
+.header .logo,
+.header .logo img {
+  max-height: calc(var(--header-h) - 28px);
+  height: auto;
+  transition: max-height .25s ease;
+}
+.header.is-shrunk .logo,
+.header.is-shrunk .logo img {
+  max-height: calc(var(--header-h-shrunk) - 16px);
+}
+
+/* Flytta ner sidan så den inte hamnar under headern (JS sätter rätt höjd) */
+body {
+  padding-top: var(--header-spacer, var(--header-h)) !important;
+  transition: padding-top .25s ease;
+}
+
+/* Om du har en slide-down mobilmeny, lägg den precis under headern */
+#menu-panel {
+  position: fixed;
+  left: 0; right: 0;
+  top: var(--header-spacer, var(--header-h)); /* följer headerhöjd */
+  z-index: 9998;
+}
+/* Frys shrink när mobilmenyn är öppen */
+body.menu-open .header { height: var(--header-h) !important; }
+body.menu-open .header .logo,
+body.menu-open .header .logo img { max-height: calc(var(--header-h) - 28px) !important; }
+
+/* (om du använder --header-spacer till panelens top) */
+body.menu-open { --header-spacer: var(--header-h); }
+
+/* valfritt: lås bakgrundsscroll när menyn är öppen */
+body.menu-open { overflow: hidden; }
+/* === GALLERY GRID === */
+.gallery-grid{
+  --gap: 18px;
+  width: min(1200px, 92%);
+  margin: 30px auto;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* 2–3 per rad */
+}
+
+/* Grundläge */
+.gallery-grid .block--gallery {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  box-shadow:
+    0 10px 0px #D1D8FF,
+    0 16px 0px #00000033;  /* samma stil som .btn */
+  border-radius: 12px;   /* matcha blockens rundning */
+}
+
+/* Hoverläge */
+.gallery-grid .block--gallery:hover {
+  transform: scale(1.02);  /* lätt expansion */
+  box-shadow:
+    0 9px 0px #D1D8FF,
+    0 28px 0px #00000033;  /* djupare skugga på hover */
+}
+
+
+/* Om du bara vill ändra skuggan för bilden (inte caption) */
+.gallery-grid .block--gallery img {
+  transition: inherit; /* ärver transition */
+}
+
+
+/* Block-variant för rena bildkort i galleri */
+.block--gallery{
+  max-width: none;                 /* tillåt grid:en styra bredden */
+  padding: 0;                      /* ingen extra padding runt bilden */
+  overflow: hidden;                /* viktigt för rundade hörn + beskärning */
+  display: block;
+}
+
+/* Själva bilden fyller blocket och är rundad som dina andra block */
+.block--gallery img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;            /* enhetliga kort; byt/ta bort om du vill auto-höjd */
+  object-fit: cover;               /* beskär istället för att stretcha */
+  border-radius: 12px;             /* samma som .block */
+}
+
+/* (Valfritt) Caption under bilden i samma kort */
+.block--gallery .caption{
+  padding: 10px 12px 14px;
+  text-align: center;
+  font-weight: 600;
+  font-size: .95rem;
+}
+/* === GALLERY (OVERRIDES LAST) === */
+.gallery-grid {
+  column-gap: 18px; /* mellan kolumner */
+  row-gap: 8px;     /* mellan rader */
+  width: min(1200px, 92%);
+  margin: 30px auto;
+  display: grid;
+  gap: var(--gap);
+  /* 2 kolumner som baseline, även på mobil */
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+/* Bryt ner till 2 kolumner lite tidigare om du vill */
+@media (max-width: 900px){
+  .gallery-grid{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px){
+  .gallery-grid{
+    grid-template-columns: 1fr;    /* 1 per rad på riktigt små skärmar */
+  }
+}
+
+/* Växla upp till 3 kolumner på bredare skärm */
+@media (min-width: 900px){
+  .gallery-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Kort-variant för galleriet */
+.block--gallery{
+  max-width: none !important;   /* låt grid styra bredden */
+  padding: 0 !important;
+  overflow: hidden;
+  display: block;
+}
+
+/* Bild 3:4 + rundade hörn */
+.block--gallery img{
+  display: block;
+  width: 100%;
+  height: auto;           /* höjd styrs av aspect-ratio */
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 12px;    /* matchar dina andra block */
+}
+/* === LIGHTBOX (bild-popup) === */
+.lightbox-backdrop{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.lightbox-backdrop.is-open{ display: flex; }
+
+.lightbox-dialog{
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  outline: none;
+}
+
+.lightbox-img{
+  max-width: 92vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px; /* samma rundning som dina block */
+  display: block;
+  background: #111;
+}
+
+.lightbox-caption{
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.15);
+  border: none;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+.lightbox-close{
+  top: -14px; right: -14px; transform: none;
+  font-size: 24px; padding: 8px 12px;
+}
+.lightbox-prev{ left: -56px; }
+.lightbox-next{ right: -56px; }
+
+@media (max-width: 600px){
+  .lightbox-prev{ left: 8px; }
+  .lightbox-next{ right: 8px; }
+}
+/* Fixa z-index + större klickyta + position */
+.lightbox-prev,
+.lightbox-next,
+.lightbox-close{
+  z-index: 2;                 /* ovanpå bilden */
+  pointer-events: auto;       /* säkerställ klickbar */
+}
+
+.lightbox-img{
+  z-index: 1;                 /* under knapparna */
+  /* valfritt: låt klick “passera” om du vill: pointer-events:none; */
+}
+
+/* Placera pilarna inne vid kanterna (inte med negativa offset) */
+.lightbox-prev{ left: 12px; }
+.lightbox-next{ right: 12px; }
+
+/* Gör pilarna lättare att trycka på */
+.lightbox-prev,
+.lightbox-next{
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+/* --- Lang button: clean, no shadow --- */
+.lang-switch__btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 12px;
+  border:2px solid #ffffff;             /* accent */
+  background:#fff;                       /* enkel */
+  color:#111;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition: background .18s ease, color .18s ease, transform .12s ease, border-color .18s ease, padding .12s ease;
+  box-shadow:none;                       /* ingen skugga */
+}
+
+/* kvadratisk flagga */
+.lang-switch__btn .flag{
+  width:auto; height:20px;               /* kvadrat */
+  object-fit:cover; display:block;
+  border-radius:4px;                      /* lite rund hörn, ta bort om du vill helt kvadrat */
+}
+
+/* hover: lätt expandering + ljusare accent + vit text */
+.lang-switch__btn:hover{
+  transform: translateY(-1px);
+  background:#FFDD17;                     /* ljusare accentyta */
+  border-color:#FFDD17;                   /* ljusare kant */
+  color:#ffffff;                             /* vit text */
+    box-shadow: 
+    0 3px 0px #FFB213,
+    0 4.5px 0px #00000033;
+}
+
+/* kompakt på små skärmar: dölj text, behåll flagga */
+@media (max-width: 900px){
+  .lang-switch__btn .label{ display:none; }
+  .lang-switch__btn{ padding:8px; }       /* tightare utan text */
+}
+
+/* På små skärmar – behåll dem nära kanten */
+@media (max-width: 600px){
+  .lightbox-prev{ left: 8px; }
+  .lightbox-next{ right: 8px; }
+}
+  @media (max-width: 600px) {
+  .block {
+    max-width: 350px; /* smalare block på små skärmar */
+    padding: 24px 16px; /* lite tunnare padding */
+  }
+}
+/* === Lang switch: position & size === */
+.lang-switch{
+  position: absolute;
+  top: 10px;               /* justera din "viss padding" här */
+  right: 12px;
+  z-index: 1001;           /* över nav-länkar */
+}
+
+.lang-switch__btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;            /* mindre knapp */
+  padding: 6px 10px;
+  border: 1.5px solid #D1D8FF;
+  background: #f3f5ff;
+  color: #111;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 13px;         /* mindre textstorlek */
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: none;        /* ingen skugga */
+  transition: background .18s ease, border-color .18s ease, transform .12s ease;
+}
+
+.lang-switch__btn .flag{
+  width: auto; height: 18px;     /* kvadratisk flagga */
+  object-fit: cover; display: block;
+  border-radius: 4px;
+}
+
+.lang-switch{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  inset-inline-start: auto; /* försäkra */
+  max-width: calc(100vw - 24px); /* kan aldrig sticka ut åt höger */
+}
+
+
+/* === Popup-meny under knappen === */
+.lang-switch__menu{
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  max-height: 240px;             /* vertikal scroll om många språk */
+  overflow-y: auto;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  display: none;
+}
+
+.lang-switch__menu.is-open{ display: block; }
+
+.lang-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.lang-item:hover{ background: #FFDD17 }
+
+/* === Små skärmar: håll knappen i hörnet, visa bara flagga, gör knappen kvadratisk === */
+@media (max-width: 900px){
+  .lang-switch{
+    top: 8px;
+    right: max(8px, env(safe-area-inset-right)); /* notchar / runda hörn */
+    left: auto;
+  }
+  .lang-switch__btn{
+    width: 36px; height: 36px; padding: 6px; border-radius: 8px;
+  }
+  .lang-switch__btn .label{ display: none; }
+}
+
+
+/* Se till att den inte påverkas av grid-layouten */
+.header .header-inner{ position: relative; }  /* redan satt hos dig, men bra att försäkra */
+/* === HOTFIX: Language button always visible === */
+#langSwitch{
+  position: fixed !important;         /* pinna till viewporten */
+  top: calc(env(safe-area-inset-top) + 8px) !important;
+  right: calc(env(safe-area-inset-right) + 8px) !important;
+  z-index: 10050 !important;          /* över header/meny */
+}
+#langSwitch .lang-switch__menu{
+  right: 0; left: auto;               /* droppa rakt ned åt vänster */
+}
+@media (max-width: 900px){
+  #langBtn .label{ display:none; }    /* bara flagga på små skärmar */
+  #langBtn{ width:36px; height:36px; padding:6px; }
+}
+/* === Language button scale on header shrink === */
+.header.is-shrunk #langSwitch{
+  transform: scale(0.8);        /* krymper till 80% */
+  transform-origin: top right;  /* skala från övre högra hörnet */
+  transition: transform 0.3s ease;
+}
+
+#langSwitch{
+  transition: transform 0.3s ease; /* smidig animering även när den växer tillbaka */
+}
+/* === Contact Summary – snabba fixar === */
+
+/* 1) Centrera "Submitted"-raden (och ev. andra p i summary-blocket) */
+#contactSummary p{
+  text-align: center !important;   /* vinner över .faq-panel p { text-align:left } */
+}
+
+/* 2) Låt långa värden (e-post m.m.) brytas inom boxen */
+#contactSummary .summary-list dd{
+  overflow-wrap: anywhere;         /* moderna browsers, bryt var som helst vid behov */
+  word-break: break-word;          /* fallback */
+}
+
+/* (valfritt) se till att raderna inte hoppar i höjd vid långa värden */
+#contactSummary .summary-list{
+  align-items: start;
+}

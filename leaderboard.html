@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="site.title">GooseHunt Game – Official Page</title>
+  <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/img/favicon/favicon_favicon_goosehunt_large.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon_goosehunt_small.png">
+  <link rel="icon" type="image/x-icon" href="./assets/img/favicon/favicon.ico">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...et=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+
+  <!-- LANGUAGE -->
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css">
+  <link rel="stylesheet" href="./assets/css/consent.css">
+
+  <!-- Consent -->
+  <script src="./js/consent.js" defer></script>
+
+  <!-- Extra favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon.png">
+
+  <!-- Hotwire Turbo -->
+  <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
+</head>
+
+<body>
+  <!-- 🔁 Shared header (laddas av include.js) -->
+  <div id="header"></div>
+
+  <script>
+    function resizeStretch() {
+      const main = document.querySelector("main");
+      main.style.minHeight = "";
+      const pageHeight = document.body.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      if (pageHeight < viewportHeight) {
+        main.style.minHeight = viewportHeight + "px";
+      }
+    }
+    window.addEventListener("load", resizeStretch);
+    window.addEventListener("resize", resizeStretch);
+
+    window.addEventListener("load", function() {
+      const main = document.querySelector("main");
+      main.style.minHeight = "100vh";
+      main.style.display = "flex";
+      main.style.alignItems = "center";
+      main.style.justifyContent = "center";
+
+      const section = main.querySelector("section");
+      section.style.width = "50%";
+      section.style.textAlign = "center";
+      const img = section.querySelector("img");
+      if (img) { img.style.maxWidth = "100%"; img.style.height = "auto"; }
+    });
+  </script>
+
+  <!-- CONTENT START -->
+  <main>
+    <section class="block block-small">
+      <h2 data-i18n="community.title">LEADERBOARD</h2>
+      <p data-i18n="community.desc">UNDER CONSTRUCTION</p>
+      <p><i>Coming soon :-)</i></p>
+      <a class="btn" href="./" data-i18n="cta.playstore">BACK TO HOMEPAGE</a>
+    </section>
+  </main>
+  <!-- CONTENT END -->
+
+  <!-- 🔁 Shared footer (laddas av include.js) -->
+  <div id="footer"></div>
+
+  <!-- Dina övriga scripts -->
+  <script src="./js/nav.js" defer></script>
+  <script src="./js/theme-color.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+/* ===== Cookie & Consent – Styles (uppdaterad för att matcha main.css) ===== */
+
+/* Variabler – samma stil som block + knappar */
+:root {
+  --c-bg: #ffffff;        /* blockens bakgrund */
+  --c-fg: #1a0812;        /* huvudtextfärg */
+  --c-accent: #FFDD17;    /* gul accent */
+  --c-muted: #444;        /* grå för småtexter */
+  --c-card: #ffffff;      /* vit kortbakgrund */
+  --c-radius: 12px;       /* samma rundning som block */
+  --c-shadow: 0 6px 0px #D1D8FF, 0 15px 0px #0000004d; /* block-skugga */
+}
+
+.consent-hidden { display: none !important; }
+
+/* Banner */
+.consent-banner {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.consent-banner__card {
+  max-width: 900px;
+  width: min(900px, 92vw);
+  background: var(--c-bg);
+  color: var(--c-fg);
+  border-radius: var(--c-radius);
+  box-shadow: var(--c-shadow);
+  padding: 16px 18px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr auto;
+}
+
+.consent-banner__text {
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.5;
+}
+.consent-banner__text small {
+  color: var(--c-muted);
+  text-align: center;
+  display: block;
+  margin-top: 6px;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Buttons – matcha main.css .btn */
+.consent-btn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.consent-btn--primary {
+  background: #FFDD17;
+  color: #111;
+  box-shadow:
+    0 4px 0px #FFB213,
+    0 8px 0px #00000033;
+}
+.consent-btn--primary:hover {
+  color: #fff;
+  box-shadow:
+    0 6px 0px #FFB213,
+    0 14px 0px #00000033;
+}
+
+.consent-btn--ghost {
+  background: #FFDD17;
+  color: #111;
+  border: none;          /* tar bort border helt */
+  outline: none;         /* tar bort fokus-outline */
+  box-shadow:
+    0 4px 0px #FFB213,
+    0 8px 0px #00000033;
+}
+.consent-btn--ghost:hover {
+  color: #ffffff;
+  box-shadow:
+    0 6px 0px #FFB213,
+    0 14px 0px #00000033;
+}
+
+.consent-link {
+  color: #0048ff;
+  text-decoration: none;
+  font-weight: 600;
+  font-style: italic;
+  cursor: pointer;
+}
+
+/* Modal */
+.consent-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+}
+
+.consent-modal {
+  background: var(--c-card);
+  color: var(--c-fg);
+  border-radius: var(--c-radius);
+  box-shadow: var(--c-shadow);
+  width: min(780px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.consent-modal header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e3e3e3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.consent-modal h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.consent-close {
+  background: transparent;
+  border: 0;
+  color: var(--c-muted);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.consent-body {
+  padding: 12px 20px 4px;
+}
+
+.consent-section {
+  background: #fafbff;
+  border: 1px solid #d1d8ff;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 10px 0;
+  display: grid;
+  gap: 8px;
+}
+
+.consent-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.consent-col { display: grid; gap: 6px; }
+
+.consent-title { font-weight: 700; text-align: left; }
+.consent-desc { text-align: left; color: var(--c-muted); font-size: 13px; }
+
+/* ===== Switch (toggle) – robust på små skärmar ===== */
+.switch {
+  --h: 28px;
+  --pad: 3px;
+  --knob: 22px;
+  width: 50px;
+  height: var(--h);
+  position: relative;
+  flex: 0 0 auto;         /* hindra att den trycks ihop i flex-layouter */
+}
+.switch input { display: none; }
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #d1d8ff;
+  border-radius: 999px;
+  transition: .2s;
+  overflow: hidden;       /* klipp spill så kulan aldrig syns utanför */
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  width: var(--knob);
+  height: var(--knob);
+  left: var(--pad);
+  top: var(--pad);
+  background: #ffffff;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.switch input:checked + .slider { background: var(--c-accent); }
+
+/* Viktigt: använd left + calc i stället för hårdkodad translateX */
+.switch input:checked + .slider:before {
+  left: calc(100% - var(--pad) - var(--knob));
+  transform: none;
+}
+
+.switch input:disabled + .slider {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.consent-footer {
+  padding: 16px 20px 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  border-top: 1px solid #e3e3e3;
+}
+
+/* Mobile */
+@media (max-width:640px){
+  .consent-banner__card{ grid-template-columns:1fr; gap:14px; }
+  .consent-actions{ justify-content:flex-start; }
+}
+
+/* ===== Inline "Policy Block" – matchar .block ===== */
+.block.block--policy {
+  max-width: 680px;
+  text-align: left;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--c-shadow);
+}
+.block.block--policy .policy-title {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.block.block--policy .policy-desc {
+  margin: 0 0 14px 0;
+  color: #444;
+  line-height: 1.5;
+}
+.block.block--policy .consent-footer {
+  justify-content: flex-end;
+}

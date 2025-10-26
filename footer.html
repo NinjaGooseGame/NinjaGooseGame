@@ -1,0 +1,32 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('reset-consent');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.ghConsent?.reset) {
+        window.ghConsent.reset(); // 👉 visar bannern igen
+      }
+    });
+  }
+});
+</script>
+
+<footer class="container footer" role="contentinfo">
+  <nav class="footer-nav" aria-label="Footer">
+    <ul>
+      <li><a href="./aboutus.html" data-i18n="footer.about">ABOUT</a></li>
+      <li><a href="./contact.html" data-i18n="footer.contact">CONTACT</a></li>
+      <li><a href="./faq.html">FAQ</a></li>
+      <li><a href="./download.html" data-i18n="footer.download">DOWNLOAD</a></li>
+      <li><a href="./bugreport.html" data-i18n="">BUGREPORT</a></li>
+      <li><a href="#!" id="open-consent" data-i18n="footer.cookies">COOKIES</a></li>
+      <li><a href="./policies.html" data-i18n="">POLICIES</a></li>
+      <a hidden href="#" onclick="document.getElementById('consentBanner')?.classList.remove('consent-hidden');document.getElementById('consentModal')?.classList.add('consent-hidden');return false;">Consent (dev)</a>
+    </ul>
+  </nav>
+  <small>
+    ©<span id="year">2025</span> GooseHunt | Johannes Bengtson |
+    <span data-i18n="footer.copyright">All rights reserved</span>
+  </small>
+</footer>

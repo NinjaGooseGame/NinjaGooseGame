@@ -1,0 +1,47 @@
+<header class="header container" role="banner" style="--menu-toggle-offset-left: 14px;">
+  <div class="header-inner" id="site-header">
+    <!-- Left nav -->
+    <nav class="nav nav-left" role="navigation" aria-label="Primary left">
+      <ul>
+        <li><a href="./" data-i18n="nav.home">HOME</a></li>
+        <li><a href="./aboutus.html" data-i18n="header.aboutus">ABOUT US</a></li>
+        <li><a href="./faq.html">FAQ</a></li>
+      </ul>
+    </nav>
+
+    <!-- Centered logo -->
+    <a href="./" class="logo-wrap" aria-label="GooseHunt homepage">
+      <img src="./assets/img/Goosehunt_Logo.png" alt="GooseHunt logo" class="logo">
+    </a>
+
+    <!-- Right nav -->
+    <nav class="nav nav-right" role="navigation" aria-label="Primary right">
+      <ul>
+        <li><a href="./leaderboard.html" data-i18n="header.leaderboard">LEADERBOARDS</a></li>
+        <li><a href="./download.html" data-i18n="header.download">DOWNLOAD</a></li>
+      </ul>
+    </nav>
+
+    <!-- Language switch mount -->
+    <div id="langMount"></div>
+
+    <!-- Menu toggle -->
+    <button class="menu-toggle" aria-controls="menu-panel" aria-expanded="false" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu (shared across all pages) -->
+<div id="menu-panel" class="menu-panel" hidden>
+  <nav class="menu-panel-nav" aria-label="Mobile menu">
+    <ul>
+      <li><a href="./" data-i18n="header.home">HOME</a></li>
+      <li><a href="./leaderboard.html" data-i18n="header.leaderboard">LEADERBOARDS</a></li>
+      <li><a href="./aboutus.html" data-i18n="header.aboutus">ABOUT US</a></li>
+      <li><a href="./faq.html" data-i18n="faq.title">FREQUENTLY ASKED QUESTIONS</a></li>
+      <li><a href="./download.html" data-i18n="header.download">DOWNLOAD</a></li>
+      <li><a href="./gallery.html" data-i18n="header.gallery">GALLERY</a></li>
+    </ul>
+  </nav>
+</div>

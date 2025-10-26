@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n="site.title">GooseHunt Game – Official Page</title>
+  <meta name="description" content="GooseHunt – Mobile Game – Official Website, Policies, Support & News" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/img/favicon/favicon_favicon_goosehunt_large.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon_goosehunt_small.png">
+  <link rel="icon" type="image/x-icon" href="./assets/img/favicon/favicon.ico">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:w...et=latin,latin-ext,cyrillic,greek,vietnamese" rel="stylesheet">
+
+  <!-- LANGUAGE -->
+  <script src="./js/base-path.js" defer></script>
+  <script src="./include.js" defer></script>
+  <script src="./js/lang-menu.js" defer></script>
+  <script src="./js/i18n.js" defer></script> 
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
+  <link rel="stylesheet" href="./assets/css/lang.css">
+
+  <!-- Consent -->
+  <link rel="stylesheet" href="./assets/css/consent.css">
+  <script src="./js/consent.js" defer></script>
+
+  <!-- Extra favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon.png">
+
+  <!-- Hotwire Turbo -->
+  <script src="https://cdn.skypack.dev/@hotwired/turbo"></script>
+</head>
+
+<body>
+  <!-- 🔁 Shared header (laddas av include.js) -->
+  <div id="header"></div>
+
+  <!-- CONTENT START -->
+  <main>
+    <section class="block block-small">
+      <div class="img-placeholder-inner">
+        <img src="./assets/img/Sample1.jpg" alt="GooseHunt screenshot">
+      </div>
+
+      <h3 data-i18n="index.catchtitle">CATCH THE GOOSE, WIN THE HUNT.</h3>
+      <p data-i18n="index.catchsubtitle">A fast-paced runner game, Now on iOS & Android.</p>
+
+      <div class="store-buttons">
+        <a class="btn" href="#" data-i18n="cta.appstore">App Store</a>
+        <a class="btn" href="#" data-i18n="cta.playstore">Google Play</a>
+      </div>
+    </section>
+
+    <section class="block block-small">
+      <div class="img-placeholder-inner">
+        <img src="./assets/img/sample2.png" alt="GooseHunt screenshot">
+      </div>
+      <h3 data-i18n="index.changetitle">CHANGE YOUR LOOK</h3>
+      <p data-i18n="index.changesubtitle">Look sharp, chase geese, switch outfits — repeat</p>
+    </section>
+
+    <section class="block block--stretch-free" data-gallery>
+      <div class="gallery-main" aria-label="Swipe gallery" tabindex="0">
+        <div class="gallery-track">
+          <img src="./assets/img/sample3.png" alt="GooseHunt – city run">
+          <img src="./assets/img/sample4.png" alt="GooseHunt – powerup">
+          <img src="./assets/img/sample5.jpeg" alt="GooseHunt – scoreboard">
+          <img src="./assets/img/Sample1.jpg" alt="GooseHunt – night scene">
+          <img src="./assets/img/sample2.png" alt="GooseHunt – night scene">
+        </div>
+      </div>
+
+      <div class="gallery-thumbs">
+        <img src="./assets/img/sample3.png" alt="" class="is-active">
+        <img src="./assets/img/sample4.png" alt="">
+        <img src="./assets/img/sample5.jpeg" alt="">
+        <img src="./assets/img/Sample1.jpg" alt="">
+        <img src="./assets/img/sample2.png" alt="">
+      </div>
+
+      <h1 class="block__header" data-i18n="index.hunttitle">NEW HUNTING GROUNDS</h1>
+      <p data-i18n="index.huntsubtitle">The geese are spreading fast… from streets to forests. We need your help to keep the chaos under control!</p>
+    </section>
+
+    <section class="block block-small">
+      <h2 data-i18n="index.leaderboardtitle">LEADERBOARD</h2>
+      <p data-i18n="index.leaderboardsubtitle">View the global leaderboards and who is in the lead for the greatest geesecatcher!</p>
+      <a class="btn" href="./leaderboard.html" data-i18n="leaderboardbutton">LEADERBOARDS</a>
+    </section>
+  </main>
+  <!-- CONTENT END -->
+
+  <!-- 🔁 Shared footer (laddas av include.js) -->
+  <div id="footer"></div>
+
+  <!-- Inline script flyttat hit (galleri) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-gallery]').forEach(root => {
+      const main   = root.querySelector('.gallery-main');
+      const slides = Array.from(root.querySelectorAll('.gallery-track img'));
+      const thumbs = Array.from(root.querySelectorAll('.gallery-thumbs img'));
+      let programmaticJumpUntil = 0;
+
+      function setActive(i){ thumbs.forEach((t,j) => t.classList.toggle('is-active', j === i)); }
+      function goTo(i){
+        const el = slides[i];
+        if (!el) return;
+        programmaticJumpUntil = performance.now() + 350;
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        setActive(i);
+      }
+      thumbs.forEach((t,i) => t.addEventListener('click', () => goTo(i)));
+
+      function nearestSlideIndex(){
+        const mainRect = main.getBoundingClientRect();
+        const centerX  = (mainRect.left + mainRect.right) / 2;
+        let bestI = 0, bestDist = Infinity;
+        slides.forEach((img, i) => {
+          const r = img.getBoundingClientRect();
+          const slideCenter = (r.left + r.right) / 2;
+          const d = Math.abs(slideCenter - centerX);
+          if (d < bestDist){ bestDist = d; bestI = i; }
+        });
+        return bestI;
+      }
+
+      let ticking = false;
+      main.addEventListener('scroll', () => {
+        if (performance.now() < programmaticJumpUntil) return;
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          setActive(nearestSlideIndex());
+          ticking = false;
+        });
+      }, { passive: true });
+
+      setActive(0);
+      window.addEventListener('load', () => setActive(nearestSlideIndex()));
+    });
+  });
+  </script>
+</body>
+</html>
