@@ -1,11 +1,10 @@
-// /js/i18n.js  (drop-in fix)
+// /js/i18n.js  (drop-in fix: synka språkknapp när headern dyker upp)
 (() => {
   const STORAGE_KEY = "lang";
 
-  // === Val: styr hur vi väljer start-språk ===
-  // 1) Tvinga ett språk som default (t.ex. "en"). Sätt till null för att inte tvinga.
-  const FORCE_DEFAULT = "en"; // ex: "en" or null
-  // 2) Om FORCE_DEFAULT är null: ska vi använda navigator.language som auto? (annars "en")
+  // === Val: styr start-språk ===
+  // Sätt till "en" om du alltid vill börja på engelska, annars lämna null.
+  const FORCE_DEFAULT = null; // ex: "en"
   const USE_NAVIGATOR = true;
 
   // Läs stödda språk från window.LANGS om möjligt (sanningskällan), annars fallback
@@ -41,50 +40,62 @@
   const SUPPORTED = () => getLangs().map(x => x.code);
   const DEFAULT   = () => (SUPPORTED().includes("en") ? "en" : SUPPORTED()[0]);
 
-  // Hjälpfunktion: läs "site.title" från nästlad JSON
   function getByPath(obj, path){
     return path.split('.').reduce((o,k)=> (o && typeof o==='object') ? o[k] : undefined, obj);
   }
 
-  // Hitta vilket språk vi ska använda
+  const norm = s => (s||"").toLowerCase().split('-')[0];
+
   const pickLang = () => {
     const sup = SUPPORTED();
-
-    // 0) Tvingad default?
     if (FORCE_DEFAULT && sup.includes(FORCE_DEFAULT)) return FORCE_DEFAULT;
 
-    // 1) Sparat av användaren?
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = (localStorage.getItem(STORAGE_KEY) || "").toLowerCase();
     if (saved && sup.includes(saved)) return saved;
 
-    // 2) Auto via navigator?
     if (USE_NAVIGATOR) {
       const nav = (navigator.language || "").toLowerCase();
-      // matcha ex. sv-SE → sv, pt-BR → pt, zh-Hans → zh-Hans
-      const exact = sup.find(c => c === nav);
-      if (exact) return exact;
+      if (sup.includes(nav)) return nav;
       const short = nav.slice(0,2);
       if (sup.includes(short)) return short;
     }
-
-    // 3) Fallback
     return DEFAULT();
   };
 
-  // Uppdatera språkknappen (label + flagga)
+  function updateActiveMarkers(lang){
+    document.querySelectorAll("[data-lang]").forEach(btn => {
+      btn.toggleAttribute("aria-current", btn.dataset.lang === lang);
+    });
+  }
+
   function updateLangButton(lang){
     const conf = getLangs().find(x => x.code === lang);
     const btn  = document.getElementById('langBtn');
-    if (!btn || !conf) return;
+    if (!btn || !conf) return false;
     const label = btn.querySelector('.label');
     const img   = btn.querySelector('.flag');
     if (label) label.textContent = conf.name || lang.toUpperCase();
     if (img)   img.src = conf.flag || `./assets/img/flags/${lang}.png`;
     btn.setAttribute('data-current-lang', lang);
     btn.toggleAttribute("aria-current", true);
+    return true;
   }
 
-  // Ladda språk och applicera + se till att knappen synkar
+  function currentLang(){
+    return (document.documentElement.getAttribute("lang")
+         || localStorage.getItem(STORAGE_KEY)
+         || pickLang());
+  }
+
+  // Synka UI (knapp + markeringar). Kör den säkert även om knappen inte finns ännu.
+  function syncLangUI(){
+    const lang = currentLang();
+    const ok = updateLangButton(lang);
+    updateActiveMarkers(lang);
+    return ok;
+  }
+
+  // Ladda och applicera översättningar
   const loadLang = async (lang = pickLang()) => {
     try {
       const conf = getLangs().find(x => x.code === lang);
@@ -92,17 +103,14 @@
       const res  = await fetch(url, { cache: "no-store" });
       const dict = await res.json();
 
-      // <html lang="..">
       document.documentElement.setAttribute('lang', lang);
 
-      // <title data-i18n="site.title">
       const titleEl = document.querySelector("title[data-i18n]");
       if (titleEl) {
         const t = getByPath(dict, titleEl.dataset.i18n);
         if (typeof t === "string") document.title = t;
       }
 
-      // Textnoder
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.dataset.i18n;
         if (!key) return;
@@ -110,41 +118,29 @@
         if (typeof txt === "string") el.innerHTML = txt;
       });
 
-      // Attribut (placeholder, value, title, aria-label)
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        const val = getByPath(dict, key);
-        if (typeof val === "string") el.setAttribute("placeholder", val);
-      });
-      document.querySelectorAll("[data-i18n-value]").forEach(el => {
-        const key = el.getAttribute("data-i18n-value");
-        const val = getByPath(dict, key);
-        if (typeof val === "string") el.setAttribute("value", val);
-      });
-      document.querySelectorAll("[data-i18n-title]").forEach(el => {
-        const key = el.getAttribute("data-i18n-title");
-        const val = getByPath(dict, key);
-        if (typeof val === "string") el.setAttribute("title", val);
-      });
-      document.querySelectorAll("[data-i18n-aria-label]").forEach(el => {
-        const key = el.getAttribute("data-i18n-aria-label");
-        const val = getByPath(dict, key);
-        if (typeof val === "string") el.setAttribute("aria-label", val);
+      [["data-i18n-placeholder","placeholder"],
+       ["data-i18n-value","value"],
+       ["data-i18n-title","title"],
+       ["data-i18n-aria-label","aria-label"]]
+      .forEach(([attr, target])=>{
+        document.querySelectorAll("["+attr+"]").forEach(el=>{
+          const key = el.getAttribute(attr);
+          const val = getByPath(dict, key);
+          if (typeof val === "string") el.setAttribute(target, val);
+        });
       });
 
-      // Markera aktivt språk i listor
-      document.querySelectorAll("[data-lang]").forEach(btn => {
-        btn.toggleAttribute("aria-current", btn.dataset.lang === lang);
-      });
-
-      // NYTT: uppdatera språkknappen även vid första laddningen
-      updateLangButton(lang);
+      // Försök synka knappen direkt…
+      if (!syncLangUI()) {
+        // …om den inte finns än, vänta in den med observer + tidsbackup
+        waitForLangButtonThenSync();
+      }
     } catch (e) {
       console.error("i18n load failed", e);
     }
   };
 
-  // Global: byt språk + spara
+  // Publik API
   window.setLanguage = async (lang) => {
     const sup = SUPPORTED();
     if (!sup.includes(lang)) lang = DEFAULT();
@@ -152,7 +148,6 @@
     await loadLang(lang);
   };
 
-  // Init – välj språk, spara om saknas, ladda och synka UI
   async function initI18n() {
     const lang = pickLang();
     if (localStorage.getItem(STORAGE_KEY) !== lang) {
@@ -161,36 +156,43 @@
     await loadLang(lang);
   }
 
+  // === Vänta in att #langBtn dyker upp (t.ex. efter att headern inkluderats) ===
+  function waitForLangButtonThenSync() {
+    // 1) MutationObserver – snabb och exakt
+    const obs = new MutationObserver(() => {
+      if (document.getElementById('langBtn')) {
+        syncLangUI();
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+
+    // 2) Tidsbackup: prova några gånger det första sekunderna
+    let tries = 0;
+    const max = 20; // ~2s
+    const tick = () => {
+      if (syncLangUI() || tries++ > max) return;
+      setTimeout(tick, 100);
+    };
+    tick();
+  }
+
+  // Init
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initI18n);
   } else {
     initI18n();
   }
+
+  // Stöd för navigationsramverk/partials
   document.addEventListener('turbo:load', initI18n);
   document.addEventListener('htmx:afterSettle', initI18n);
 
-  // --- Valfritt: IP/Geo-gissning ---
-  // OBS: kräver extern tjänst (sekretess & CORS). Om du absolut vill:
-  // (1) Lägg till en mapping från landskod → språk (t.ex. SE→sv, NO→no, DK→da, FI→fi, annars en)
-  // (2) Kör detta EN gång vid första besöket om ingen lang finns sparad.
-  /*
-  async function guessLangFromIP() {
-    try {
-      const r = await fetch("https://ipapi.co/json/"); // exempeltjänst
-      const j = await r.json();
-      const cc = (j && j.country_code) ? j.country_code.toUpperCase() : "US";
-      const map = { SE:"sv", NO:"no", DK:"da", FI:"fi", IS:"is" };
-      const sup = SUPPORTED();
-      const lang = map[cc] && sup.includes(map[cc]) ? map[cc] : DEFAULT();
-      return lang;
-    } catch {
-      return DEFAULT();
-    }
-  }
-  // Exempel-användning:
-  // if (!localStorage.getItem(STORAGE_KEY)) {
-  //   const ipLang = await guessLangFromIP();
-  //   localStorage.setItem(STORAGE_KEY, ipLang);
-  // }
-  */
+  // Om include.js triggar en custom event efter att header/footer laddats — lyssna och synka.
+  // (Du behöver inte ändra include.js för att detta ska funka, men om du redan sänder en event är vi redo.)
+  ["partials:loaded","partials:ready","header:loaded","footer:loaded"].forEach(evt=>{
+    document.addEventListener(evt, () => {
+      if (!syncLangUI()) waitForLangButtonThenSync();
+    });
+  });
 })();
