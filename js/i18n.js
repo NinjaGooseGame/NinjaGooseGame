@@ -4,7 +4,7 @@
 
   // === Val: styr hur vi väljer start-språk ===
   // 1) Tvinga ett språk som default (t.ex. "en"). Sätt till null för att inte tvinga.
-  const FORCE_DEFAULT = "en"; // ex: "en"
+  const FORCE_DEFAULT = "en"; // ex: "en" or null
   // 2) Om FORCE_DEFAULT är null: ska vi använda navigator.language som auto? (annars "en")
   const USE_NAVIGATOR = true;
 
