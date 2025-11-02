@@ -1,19 +1,32 @@
+html { scrollbar-gutter: stable both-edges; }
 /* ====== Bas ====== */
 body {
   margin: 0;
 
-  /* Lager: 1) transparent PNG, 2) bakgrundsfärg */
-  background:
-    url("../img/clouds-background.png") repeat-y center top, /* transparent PNG */
-    #2f82ef; /* fallback färg */
-
-  background-size: auto, auto;
-  background-attachment: scroll;
-
+  /* Behåll din font och styling exakt som innan */
   font-family: 'Poppins', sans-serif;
   color: #1a0812;
   text-align: center;
+
+  /* Flytta ut bakgrunden till ett fast pseudo-lager */
+  background: none !important;
 }
+
+/* Fast bakgrundslager som aldrig flyttar sig */
+body::before {
+  content: "";
+  position: fixed;        /* sitter fast mot viewporten */
+  inset: 0;
+  z-index: -1;            /* hamnar bakom allt innehåll */
+
+  /* Samma bakgrund som tidigare */
+  background:
+    url("../img/clouds-background.png") repeat-y center top,
+    #2f82ef;
+  background-size: auto, auto;
+  background-attachment: scroll, scroll;
+}
+
 
 
 /* === Header (sticky + shrink) === */
