@@ -1784,3 +1784,29 @@ body.menu-open { overflow: hidden; }
 #contactSummary .summary-list{
   align-items: start;
 }
+/* === Disable iOS/Mac Safari bounce (rubber-band) globally === */
+html, body {
+  overscroll-behavior: none;       /* För Chrome, Edge, Firefox */
+  height: 100%;
+}
+
+/* Gör att dokumentet inte kan dras längre än sin faktiska höjd */
+body {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* krävs för att behålla mjuk scroll */
+}
+
+/* iOS Safari special: stop bounce när man når toppen/botten */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    overscroll-behavior-y: none !important;
+    overflow-anchor: none;
+  }
+}
+/* === Footer adjustment override === */
+.footer {
+  min-height: 60px !important;
+  padding-bottom: 25px !important;
+}
